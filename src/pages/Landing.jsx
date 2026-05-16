@@ -3,12 +3,12 @@ import { useEffect } from 'react'
 import { getMember, saveMember } from '../lib/member'
 
 const DEMO_MEMBER = {
-  firstName: 'Murielle',
-  lastName: 'Arnaud',
-  email: 'murielle@pernod-ricard.com',
+  firstName: 'Aditya',
+  lastName: 'Surve',
+  email: 'aditya.surve@edu.escp.eu',
   city: 'Paris',
   memberId: 'PRD-DEMO-2025',
-  points: 720,
+  points: 545,
   tier: 'Silver',
   verified: true,
   signupDate: '2025-01-15T00:00:00.000Z',
