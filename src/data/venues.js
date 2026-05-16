@@ -1,0 +1,148 @@
+export const VENUES = [
+  // Paris
+  {
+    id: 'par-01',
+    name: 'Le Cercle',
+    city: 'Paris',
+    address: '14 Rue de la Paix, 75002 Paris',
+    hours: 'Mon–Sat 18:00–02:00',
+    deal: 'Absolut at parity price all week',
+    mapsUrl: 'https://maps.google.com/?q=14+Rue+de+la+Paix+Paris',
+  },
+  {
+    id: 'par-02',
+    name: 'Brasserie Lumière',
+    city: 'Paris',
+    address: '3 Rue Montmartre, 75001 Paris',
+    hours: 'Tue–Sun 17:00–01:00',
+    deal: 'Beefeater G&T at 10% off tonight',
+    mapsUrl: 'https://maps.google.com/?q=3+Rue+Montmartre+Paris',
+  },
+  {
+    id: 'par-03',
+    name: 'Maison Noire',
+    city: 'Paris',
+    address: '27 Rue Oberkampf, 75011 Paris',
+    hours: 'Wed–Sun 20:00–03:00',
+    deal: 'Jameson shots at discount this Friday',
+    mapsUrl: 'https://maps.google.com/?q=27+Rue+Oberkampf+Paris',
+  },
+
+  // Milan
+  {
+    id: 'mil-01',
+    name: 'Aperitivo Studio',
+    city: 'Milan',
+    address: 'Via Brera 12, 20121 Milan',
+    hours: 'Tue–Sat 18:00–01:00',
+    deal: 'Havana Club cocktails at parity pricing',
+    mapsUrl: 'https://maps.google.com/?q=Via+Brera+12+Milan',
+  },
+  {
+    id: 'mil-02',
+    name: 'Navigli Social Club',
+    city: 'Milan',
+    address: 'Ripa di Porta Ticinese 55, 20143 Milan',
+    hours: 'Mon–Sun 17:00–02:00',
+    deal: 'Grey Goose spritz at premium tonight',
+    mapsUrl: 'https://maps.google.com/?q=Ripa+di+Porta+Ticinese+55+Milan',
+  },
+  {
+    id: 'mil-03',
+    name: 'Corso Cocktail Bar',
+    city: 'Milan',
+    address: 'Corso Como 1, 20154 Milan',
+    hours: 'Thu–Sun 19:00–03:00',
+    deal: 'Absolut Vodka at 8% off this week',
+    mapsUrl: 'https://maps.google.com/?q=Corso+Como+1+Milan',
+  },
+
+  // Barcelona
+  {
+    id: 'bcn-01',
+    name: 'El Barrio Bar',
+    city: 'Barcelona',
+    address: 'Carrer del Parlament 25, 08015 Barcelona',
+    hours: 'Wed–Sun 19:00–03:00',
+    deal: 'Beefeater gin at parity price all week',
+    mapsUrl: 'https://maps.google.com/?q=Carrer+del+Parlament+25+Barcelona',
+  },
+  {
+    id: 'bcn-02',
+    name: 'Gràcia Social',
+    city: 'Barcelona',
+    address: 'Carrer de Verdi 18, 08012 Barcelona',
+    hours: 'Tue–Sat 18:00–02:00',
+    deal: 'Jameson Irish Whiskey at discount tonight',
+    mapsUrl: 'https://maps.google.com/?q=Carrer+de+Verdi+18+Barcelona',
+  },
+  {
+    id: 'bcn-03',
+    name: 'Port Vell Lounge',
+    city: 'Barcelona',
+    address: 'Moll d\'Espanya, 08039 Barcelona',
+    hours: 'Mon–Sun 20:00–04:00',
+    deal: 'Havana Club at parity · cocktail menu available',
+    mapsUrl: 'https://maps.google.com/?q=Moll+d+Espanya+Barcelona',
+  },
+
+  // Vienna
+  {
+    id: 'vie-01',
+    name: 'Innere Stadt Club',
+    city: 'Vienna',
+    address: 'Rotenturmstraße 14, 1010 Vienna',
+    hours: 'Thu–Sat 21:00–04:00',
+    deal: 'Absolut at 8% off · premium weekend mode',
+    mapsUrl: 'https://maps.google.com/?q=Rotenturmstrasse+14+Vienna',
+  },
+  {
+    id: 'vie-02',
+    name: 'Naschmarkt Social',
+    city: 'Vienna',
+    address: 'Linke Wienzeile 36, 1060 Vienna',
+    hours: 'Tue–Sun 17:00–01:00',
+    deal: 'Grey Goose cocktails at parity this week',
+    mapsUrl: 'https://maps.google.com/?q=Linke+Wienzeile+36+Vienna',
+  },
+  {
+    id: 'vie-03',
+    name: 'Prater Pavilion',
+    city: 'Vienna',
+    address: 'Hauptallee 2, 1020 Vienna',
+    hours: 'Fri–Sun 18:00–02:00',
+    deal: 'Jameson whiskey at parity · live DJ Fridays',
+    mapsUrl: 'https://maps.google.com/?q=Hauptallee+2+Vienna',
+  },
+
+  // Lisbon
+  {
+    id: 'lis-01',
+    name: 'Bairro Alto Bar',
+    city: 'Lisbon',
+    address: 'Rua do Diário de Notícias 3, 1200 Lisbon',
+    hours: 'Wed–Sun 20:00–03:00',
+    deal: 'Havana Club at discount all week',
+    mapsUrl: 'https://maps.google.com/?q=Rua+do+Diario+de+Noticias+Lisbon',
+  },
+  {
+    id: 'lis-02',
+    name: 'LX Factory Lounge',
+    city: 'Lisbon',
+    address: 'Rua Rodrigues de Faria 103, 1300 Lisbon',
+    hours: 'Fri–Sun 18:00–02:00',
+    deal: 'Beefeater G&T at parity tonight',
+    mapsUrl: 'https://maps.google.com/?q=Rua+Rodrigues+de+Faria+103+Lisbon',
+  },
+  {
+    id: 'lis-03',
+    name: 'Cais do Sodré Club',
+    city: 'Lisbon',
+    address: 'Rua Nova do Carvalho 22, 1200 Lisbon',
+    hours: 'Thu–Sat 22:00–04:00',
+    deal: 'Absolut at parity · late night specials',
+    mapsUrl: 'https://maps.google.com/?q=Rua+Nova+do+Carvalho+Lisbon',
+  },
+]
+
+export const CITIES = ['Paris', 'Milan', 'Barcelona', 'Vienna', 'Lisbon']

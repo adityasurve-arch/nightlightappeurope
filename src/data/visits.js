@@ -1,0 +1,183 @@
+// companions: default NM IDs pre-seeded for demo; overridden by localStorage via getCompanions()
+export const SYNTHETIC_VISITS = [
+  {
+    id: 'V001',
+    date: '2025-05-14',
+    venueName: 'Bar Marsella',
+    city: 'Barcelona',
+    drinks: [
+      { name: 'Jameson on the Rocks', brand: 'Jameson', category: 'Whisky' },
+      { name: 'Beefeater G&T', brand: 'Beefeater', category: 'Gin' },
+    ],
+    defaultCompanions: ['NM001', 'NM002'],
+    pointsEarned: 35,
+  },
+  {
+    id: 'V002',
+    date: '2025-05-10',
+    venueName: 'Cubitá',
+    city: 'Paris',
+    drinks: [
+      { name: 'Chivas 12 Neat', brand: 'Chivas Regal', category: 'Whisky' },
+    ],
+    defaultCompanions: [],
+    pointsEarned: 20,
+  },
+  {
+    id: 'V003',
+    date: '2025-05-07',
+    venueName: 'Nottingham Forest',
+    city: 'Milan',
+    drinks: [
+      { name: 'Absolut Mule', brand: 'Absolut', category: 'Vodka' },
+      { name: 'Malibu Colada', brand: 'Malibu', category: 'Rum' },
+      { name: 'Kahlúa Espresso', brand: 'Kahlúa', category: 'Liqueur' },
+    ],
+    defaultCompanions: ['NM007', 'NM011', 'NM013'],
+    pointsEarned: 50,
+  },
+  {
+    id: 'V004',
+    date: '2025-05-03',
+    venueName: 'Xantippe',
+    city: 'Vienna',
+    drinks: [
+      { name: 'Ballantine\'s & Soda', brand: 'Ballantine\'s', category: 'Whisky' },
+      { name: 'Lillet Blanc Spritz', brand: 'Lillet', category: 'Aperitif' },
+    ],
+    defaultCompanions: ['NM004'],
+    pointsEarned: 35,
+  },
+  {
+    id: 'V005',
+    date: '2025-04-28',
+    venueName: 'Park Bar',
+    city: 'Lisbon',
+    drinks: [
+      { name: 'Beefeater Pink Tonic', brand: 'Beefeater', category: 'Gin' },
+    ],
+    defaultCompanions: [],
+    pointsEarned: 20,
+  },
+  {
+    id: 'V006',
+    date: '2025-04-22',
+    venueName: 'El Xampanyet',
+    city: 'Barcelona',
+    drinks: [
+      { name: 'Olmeca Margarita', brand: 'Olmeca', category: 'Tequila' },
+      { name: 'Malibu Sunrise', brand: 'Malibu', category: 'Rum' },
+    ],
+    defaultCompanions: ['NM001', 'NM006'],
+    pointsEarned: 35,
+  },
+  {
+    id: 'V007',
+    date: '2025-04-18',
+    venueName: 'Harry\'s Bar',
+    city: 'Paris',
+    drinks: [
+      { name: 'Jameson Sour', brand: 'Jameson', category: 'Whisky' },
+      { name: 'Absolut Cosmopolitan', brand: 'Absolut', category: 'Vodka' },
+      { name: 'Kahlúa White Russian', brand: 'Kahlúa', category: 'Liqueur' },
+    ],
+    defaultCompanions: ['NM003', 'NM008'],
+    pointsEarned: 50,
+  },
+  {
+    id: 'V008',
+    date: '2025-04-14',
+    venueName: 'Bhangrabar',
+    city: 'Milan',
+    drinks: [
+      { name: 'Chivas Cola', brand: 'Chivas Regal', category: 'Whisky' },
+    ],
+    defaultCompanions: [],
+    pointsEarned: 20,
+  },
+  {
+    id: 'V009',
+    date: '2025-04-09',
+    venueName: 'Loos Bar',
+    city: 'Vienna',
+    drinks: [
+      { name: 'Ballantine\'s Old Fashioned', brand: 'Ballantine\'s', category: 'Whisky' },
+      { name: 'Beefeater Negroni', brand: 'Beefeater', category: 'Gin' },
+    ],
+    defaultCompanions: ['NM004', 'NM009'],
+    pointsEarned: 35,
+  },
+  {
+    id: 'V010',
+    date: '2025-04-04',
+    venueName: 'Pensão Amor',
+    city: 'Lisbon',
+    drinks: [
+      { name: 'Absolut Berry Sour', brand: 'Absolut', category: 'Vodka' },
+      { name: 'Lillet Rosé Spritz', brand: 'Lillet', category: 'Aperitif' },
+    ],
+    defaultCompanions: ['NM005', 'NM010'],
+    pointsEarned: 35,
+  },
+  {
+    id: 'V011',
+    date: '2025-03-29',
+    venueName: 'Bar Calders',
+    city: 'Barcelona',
+    drinks: [
+      { name: 'Olmeca Paloma', brand: 'Olmeca', category: 'Tequila' },
+    ],
+    defaultCompanions: [],
+    pointsEarned: 20,
+  },
+  {
+    id: 'V012',
+    date: '2025-03-22',
+    venueName: 'Le Mary Céleste',
+    city: 'Paris',
+    drinks: [
+      { name: 'Chivas 18 Neat', brand: 'Chivas Regal', category: 'Whisky' },
+      { name: 'Jameson Ginger Lime', brand: 'Jameson', category: 'Whisky' },
+    ],
+    defaultCompanions: ['NM003'],
+    pointsEarned: 35,
+  },
+  {
+    id: 'V013',
+    date: '2025-03-17',
+    venueName: 'Dry Milano',
+    city: 'Milan',
+    drinks: [
+      { name: 'Absolut Spritz', brand: 'Absolut', category: 'Vodka' },
+      { name: 'Malibu Punch', brand: 'Malibu', category: 'Rum' },
+      { name: 'Kahlúa Martini', brand: 'Kahlúa', category: 'Liqueur' },
+    ],
+    defaultCompanions: ['NM007', 'NM012', 'NM002'],
+    pointsEarned: 50,
+  },
+  {
+    id: 'V014',
+    date: '2025-03-11',
+    venueName: 'Dachboden',
+    city: 'Vienna',
+    drinks: [
+      { name: 'Ballantine\'s Highball', brand: 'Ballantine\'s', category: 'Whisky' },
+    ],
+    defaultCompanions: [],
+    pointsEarned: 20,
+  },
+  {
+    id: 'V015',
+    date: '2025-03-05',
+    venueName: 'Foxtrot Oscar',
+    city: 'Lisbon',
+    drinks: [
+      { name: 'Beefeater Bramble', brand: 'Beefeater', category: 'Gin' },
+      { name: 'Lillet Tonic', brand: 'Lillet', category: 'Aperitif' },
+    ],
+    defaultCompanions: ['NM005'],
+    pointsEarned: 35,
+  },
+]
+
+export const VISIT_CITIES = ['All', 'Paris', 'Milan', 'Barcelona', 'Vienna', 'Lisbon']

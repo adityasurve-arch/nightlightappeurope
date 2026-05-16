@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0E0E10;
+  --surface: #1A1A1E;
+  --surface2: #24242A;
+  --accent: #534AB7;
+  --accent-hover: #6A61D0;
+  --text: #F0F0F5;
+  --muted: #8888A0;
+  --border: #2E2E38;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #000;
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: #000;
+}
+
+/* Phone shell — centered column on desktop, full-screen on mobile */
+.app-shell {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background-color: var(--bg);
+  position: relative;
+  /* Subtle shadow on desktop to separate from black body */
+  box-shadow: 0 0 60px rgba(83, 74, 183, 0.08), 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+/* Hide scrollbar but keep scrollable */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Scrollbar for main content */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Prevent iOS font size inflation */
+html {
+  -webkit-text-size-adjust: 100%;
+  font-size: 15px;
+}
+
+input, select, textarea {
+  font-size: 16px; /* prevents iOS zoom on focus */
+}
