@@ -1,6 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { getMember } from '../lib/member'
+import { getMember, saveMember } from '../lib/member'
+
+const DEMO_MEMBER = {
+  firstName: 'Murielle',
+  lastName: 'Arnaud',
+  email: 'murielle@pernod-ricard.com',
+  city: 'Paris',
+  memberId: 'PRD-DEMO-2025',
+  points: 720,
+  tier: 'Silver',
+  verified: true,
+  signupDate: '2025-01-15T00:00:00.000Z',
+  faceId: false,
+}
 
 const FEATURES = [
   {
@@ -32,6 +45,11 @@ export default function Landing() {
   useEffect(() => {
     if (getMember()) navigate('/dashboard', { replace: true })
   }, [])
+
+  function handleDemo() {
+    saveMember(DEMO_MEMBER)
+    navigate('/dashboard', { replace: true })
+  }
 
   return (
     <div style={{ backgroundColor: 'var(--bg)' }} className="min-h-screen flex flex-col">
@@ -87,6 +105,15 @@ export default function Landing() {
         >
           Get your free membership card →
         </Link>
+
+        {/* Demo CTA */}
+        <button
+          onClick={handleDemo}
+          className="w-full py-3.5 rounded-2xl font-semibold text-sm text-center transition-all active:scale-95 mb-3"
+          style={{ backgroundColor: 'rgba(83,74,183,0.12)', color: '#9B93E8', border: '1px solid rgba(83,74,183,0.3)' }}
+        >
+          View demo — no sign up needed
+        </button>
 
         {/* Secondary CTA */}
         <Link
