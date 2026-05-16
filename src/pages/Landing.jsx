@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { getMember } from '../lib/member'
 
 const FEATURES = [
   {
@@ -25,6 +27,12 @@ const STATS = [
 ]
 
 export default function Landing() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (getMember()) navigate('/dashboard', { replace: true })
+  }, [])
+
   return (
     <div style={{ backgroundColor: 'var(--bg)' }} className="min-h-screen flex flex-col">
       {/* Status bar spacer */}
@@ -42,7 +50,7 @@ export default function Landing() {
           <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Pernod Network</span>
         </div>
         <Link
-          to="/signup"
+          to="/dashboard"
           className="text-xs font-semibold px-3 py-1.5 rounded-lg"
           style={{ backgroundColor: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border)' }}
         >
