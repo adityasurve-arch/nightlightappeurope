@@ -31,8 +31,8 @@ export default function MemberCard({ member }) {
       {/* Header row */}
       <div className="absolute top-4 left-5 right-5 flex items-start justify-between">
         <div>
-          <div className="text-white font-bold text-sm tracking-wider opacity-90">PERNOD</div>
-          <div className="text-white text-xs opacity-50 tracking-widest">NETWORK</div>
+          <div className="text-white font-bold text-sm tracking-wider opacity-90">NIGHTLIGHT</div>
+          <div className="text-white text-xs opacity-50 tracking-widest">NIGHTLIGHT</div>
         </div>
         <span
           className="text-xs font-semibold px-2 py-0.5 rounded-full"

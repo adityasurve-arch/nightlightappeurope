@@ -25,7 +25,7 @@ export default function Navbar() {
             <span className="text-white text-xs font-bold">PR</span>
           </div>
           <span style={{ color: 'var(--text)' }} className="font-semibold text-sm hidden sm:block">
-            Pernod Network
+            Nightlight
           </span>
         </Link>
 

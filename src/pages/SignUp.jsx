@@ -119,9 +119,9 @@ export default function SignUp() {
       {/* Logo */}
       <Link to="/" className="flex items-center gap-2 mb-8">
         <div style={{ backgroundColor: 'var(--accent)' }} className="w-7 h-7 rounded-md flex items-center justify-center">
-          <span className="text-white text-xs font-bold">PR</span>
+          <span className="text-white text-xs font-bold">NL</span>
         </div>
-        <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Pernod Network</span>
+        <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Nightlight</span>
       </Link>
 
       {/* Card */}

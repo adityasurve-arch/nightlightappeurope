@@ -159,7 +159,7 @@ function TagSheet({ visitId, currentIds, onClose, onSave }) {
             )}
             {query.length === 0 && selected.length === 0 && (
               <p style={{ color: 'var(--muted)' }} className="text-xs text-center py-3">
-                Search for a Pernod Network member to tag
+                Search for a Nightlight member to tag
               </p>
             )}
             {results.map(m => {

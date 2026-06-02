@@ -188,7 +188,7 @@ export default function Profile() {
         </div>
 
         <p style={{ color: 'var(--muted)', fontSize: '11px' }} className="text-center pb-2">
-          Pernod Network · v0.1 prototype · Drink responsibly
+          Nightlight · v0.1 prototype · Drink responsibly
         </p>
       </div>
     </div>

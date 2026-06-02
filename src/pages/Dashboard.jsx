@@ -68,7 +68,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <div style={{ color: 'var(--text)' }} className="font-semibold text-sm">Apple Wallet</div>
-                  <div style={{ color: 'var(--muted)' }} className="text-xs">Pernod Network Card</div>
+                  <div style={{ color: 'var(--muted)' }} className="text-xs">Nightlight Card</div>
                 </div>
               </div>
 

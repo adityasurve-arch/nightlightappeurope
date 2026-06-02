@@ -1,5 +1,5 @@
-const KEY = 'pernod_member'
-const COMPANIONS_KEY = 'pernod_companions'
+const KEY = 'nl_member'
+const COMPANIONS_KEY = 'nl_companions'
 
 export function getMember() {
   try {
@@ -21,7 +21,7 @@ export function clearMember() {
 export function generateMemberId() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
   const rand = (n) => Array.from({ length: n }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
-  return `PRD-${rand(4)}-${rand(4)}`
+  return `NL-${rand(4)}-${rand(4)}`
 }
 
 export function updateMember(patch) {

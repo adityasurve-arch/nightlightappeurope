@@ -7,7 +7,7 @@ const DEMO_MEMBER = {
   lastName: 'Surve',
   email: 'aditya.surve@edu.escp.eu',
   city: 'Paris',
-  memberId: 'PRD-DEMO-2025',
+  memberId: 'NL-DEMO-2025',
   points: 545,
   tier: 'Silver',
   verified: true,
@@ -63,17 +63,17 @@ export default function Landing() {
             className="w-8 h-8 rounded-xl flex items-center justify-center"
             style={{ backgroundColor: 'var(--accent)' }}
           >
-            <span className="text-white text-xs font-bold">PR</span>
+            <span className="text-white text-xs font-bold">NL</span>
           </div>
-          <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Pernod Network</span>
+          <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Nightlight</span>
         </div>
-        <Link
-          to="/dashboard"
+        <button
+          onClick={handleDemo}
           className="text-xs font-semibold px-3 py-1.5 rounded-lg"
           style={{ backgroundColor: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border)' }}
         >
           Sign in
-        </Link>
+        </button>
       </header>
 
       {/* Hero */}
@@ -165,7 +165,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="px-5 py-5 text-center" style={{ borderTop: '1px solid var(--border)' }}>
         <p style={{ color: 'var(--muted)', fontSize: '11px' }} className="opacity-60">
-          Pernod Ricard Consumer Network · Drink responsibly
+          Nightlight · Drink responsibly
         </p>
       </footer>
     </div>
