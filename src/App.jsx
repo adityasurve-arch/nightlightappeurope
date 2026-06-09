@@ -8,6 +8,7 @@ import Rewards from './pages/Rewards'
 import Venues from './pages/Venues'
 import History from './pages/History'
 import Profile from './pages/Profile'
+import GroupOrder from './pages/GroupOrder'
 
 function RequireAuth({ children }) {
   return getMember() ? children : <Navigate to="/" replace />
@@ -68,6 +69,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <ProtectedLayout><Profile /></ProtectedLayout>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/order"
+            element={
+              <RequireAuth>
+                <ProtectedLayout><GroupOrder /></ProtectedLayout>
               </RequireAuth>
             }
           />

@@ -32,6 +32,18 @@ const TABS = [
     ),
   },
   {
+    to: '/order',
+    label: 'Order',
+    icon: (active) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} className="w-6 h-6">
+        <circle cx="9" cy="9" r="2.5" />
+        <circle cx="15" cy="9" r="2.5" />
+        <path d="M5 20c0-3 3-5 7-5s7 2 7 5" strokeLinecap="round" />
+        <path d="M12 3v2M8 4l1 1.5M16 4l-1 1.5" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
     to: '/rewards',
     label: 'Rewards',
     icon: (active) => (
