@@ -232,6 +232,7 @@ function buildCrewPreview(companionsMap) {
 }
 
 export default function History() {
+  const { t } = useLang()
   const navigate = useNavigate()
   const [activeCity, setActiveCity] = useState('All')
   const [companions, setCompanions] = useState(getCompanions)
@@ -272,8 +273,8 @@ export default function History() {
 
         {/* Header */}
         <div>
-          <h1 style={{ color: 'var(--text)' }} className="text-xl font-bold">My History</h1>
-          <p style={{ color: 'var(--muted)' }} className="text-sm mt-0.5">Your recent venue visits</p>
+          <h1 style={{ color: 'var(--text)' }} className="text-xl font-bold">{t('history.title')}</h1>
+          <p style={{ color: 'var(--muted)' }} className="text-sm mt-0.5">{t('history.sub')}</p>
         </div>
 
         {/* Summary strip — 2 columns */}
@@ -299,7 +300,7 @@ export default function History() {
           ))}
         </div>
 
-        {/* Group activity button */}
+        {/* {t('history.groupActivity')} button */}
         <button
           onClick={() => navigate('/profile?section=crew')}
           className="w-full flex items-center justify-between rounded-2xl px-4 py-3.5 text-left transition-all active:scale-95"
@@ -323,7 +324,7 @@ export default function History() {
               </svg>
             </div>
             <div>
-              <div style={{ color: '#9B93E8' }} className="text-sm font-semibold">Group activity</div>
+              <div style={{ color: '#9B93E8' }} className="text-sm font-semibold">{t('history.groupActivity')}</div>
               <div style={{ color: 'var(--muted)', fontSize: '11px' }} className="mt-0.5">
                 {crewCount > 0
                   ? `${crewCount} network member${crewCount !== 1 ? 's' : ''} · ${crewTopTwo.join(', ')}${crewCount > 2 ? ` +${crewCount - 2}` : ''}`
@@ -461,7 +462,7 @@ export default function History() {
             className="w-full py-3.5 rounded-2xl text-sm font-medium transition-all active:scale-95"
             style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--muted)' }}
           >
-            See past visits ({filtered.length - 2} more)
+            {t('history.seePast')} ({filtered.length - 2} {t('history.more')})
           </button>
         )}
       </div>

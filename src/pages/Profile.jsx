@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
 import { getMember, clearMember, getCompanions } from '../lib/member'
+import { useLang } from '../lib/i18n'
 import { getTier } from '../data/rewards'
 import { SYNTHETIC_VISITS } from '../data/visits'
 import { NETWORK_MEMBERS, TIER_COLORS } from '../data/networkMembers'
@@ -29,6 +30,7 @@ export default function Profile() {
   const member = getMember()
   const tier = getTier(member.points)
   const crew = buildCrew()
+  const { lang, setLang, t } = useLang()
 
   useEffect(() => {
     if (location.search.includes('section=crew') && crewRef.current) {
@@ -48,7 +50,7 @@ export default function Profile() {
       <div className="px-4 pt-8 flex flex-col gap-5">
 
         {/* Header */}
-        <h1 style={{ color: 'var(--text)' }} className="text-xl font-bold">Profile</h1>
+        <h1 style={{ color: 'var(--text)' }} className="text-xl font-bold">{t('profile.title')}</h1>
 
         {/* Avatar + name */}
         <div className="flex flex-col items-center gap-3 py-4">
@@ -70,18 +72,18 @@ export default function Profile() {
         {/* Member details */}
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
           {[
-            { label: 'Member ID', value: member.memberId },
-            { label: 'City', value: member.city },
+            { label: t('profile.memberId'), value: member.memberId },
+            { label: t('profile.city'), value: member.city },
             {
-              label: 'Member since',
-              value: new Date(member.signupDate).toLocaleDateString('en-GB', {
+              label: t('profile.memberSince'),
+              value: new Date(member.signupDate).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', {
                 day: 'numeric', month: 'long', year: 'numeric',
               }),
             },
-            { label: 'Points', value: `${member.points} pts` },
+            { label: t('profile.points'), value: `${member.points} pts` },
             {
-              label: 'Identity',
-              value: member.verified ? '✓ Verified' : '⚠ Unverified',
+              label: t('profile.identity'),
+              value: member.verified ? t('profile.verified') : t('profile.unverified'),
               valueStyle: { color: member.verified ? '#4ade80' : '#fbbf24' },
             },
           ].map(({ label, value, valueStyle }, i, arr) => (
@@ -99,12 +101,70 @@ export default function Profile() {
           ))}
         </div>
 
+        {/* My activity — History & Rewards moved here from the bottom nav */}
+        <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
+          {[
+            { icon: '🕐', label: t('profile.visitHistory'), desc: t('profile.visitHistoryDesc'), to: '/history' },
+            { icon: '⭐', label: t('profile.rewardsPoints'), desc: t('profile.rewardsPointsDesc'), to: '/rewards' },
+          ].map(({ icon, label, desc, to }, i, arr) => (
+            <button
+              key={to}
+              onClick={() => navigate(to)}
+              className="w-full flex items-center gap-3 px-4 py-3.5 text-left nl-press"
+              style={{
+                backgroundColor: 'var(--surface)',
+                border: 'none',
+                cursor: 'pointer',
+                borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
+              }}
+            >
+              <span className="text-xl flex-shrink-0">{icon}</span>
+              <div className="flex-1">
+                <div style={{ color: 'var(--text)' }} className="text-sm font-medium">{label}</div>
+                <div style={{ color: 'var(--muted)', fontSize: '11px' }}>{desc}</div>
+              </div>
+              <span style={{ color: 'var(--muted)' }}>→</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Language switcher */}
+        <div
+          className="flex items-center justify-between px-4 py-3.5 rounded-2xl"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🌐</span>
+            <span style={{ color: 'var(--text)' }} className="text-sm font-medium">{t('profile.language')}</span>
+          </div>
+          <div className="flex gap-1.5">
+            {[
+              { code: 'en', label: 'EN' },
+              { code: 'fr', label: 'FR' },
+            ].map(({ code, label }) => (
+              <button
+                key={code}
+                onClick={() => setLang(code)}
+                className="px-3 py-1.5 rounded-lg text-xs font-bold nl-press"
+                style={{
+                  backgroundColor: lang === code ? 'var(--accent)' : 'var(--surface2)',
+                  color: lang === code ? 'white' : 'var(--muted)',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Your crew */}
         <div ref={crewRef}>
           <div className="flex items-baseline justify-between mb-3">
-            <h2 style={{ color: 'var(--text)' }} className="text-sm font-semibold">Your crew</h2>
+            <h2 style={{ color: 'var(--text)' }} className="text-sm font-semibold">{t('profile.crew')}</h2>
             <span style={{ color: 'var(--muted)', fontSize: '11px' }}>
-              {crew.length} network member{crew.length !== 1 ? 's' : ''}
+              {crew.length} {crew.length !== 1 ? t('profile.networkMembers') : t('profile.networkMember')}
             </span>
           </div>
 
@@ -114,7 +174,7 @@ export default function Profile() {
               style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
             >
               <p style={{ color: 'var(--muted)' }} className="text-sm">
-                No crew yet — tag network members on your visits in History.
+                {t('profile.noCrew')}
               </p>
             </div>
           ) : (
@@ -148,7 +208,7 @@ export default function Profile() {
                     <div className="text-right flex-shrink-0">
                       <div style={{ color: 'var(--text)' }} className="text-sm font-semibold">{outings}</div>
                       <div style={{ color: 'var(--muted)', fontSize: '10px' }}>
-                        outing{outings !== 1 ? 's' : ''}
+                        {outings !== 1 ? t('profile.outings') : t('profile.outing')}
                       </div>
                     </div>
                   </div>
@@ -165,7 +225,7 @@ export default function Profile() {
             className="w-full py-3.5 rounded-2xl text-sm font-semibold opacity-40 cursor-not-allowed"
             style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
           >
-            ✏️ Edit profile — coming soon
+            {t('profile.edit')}
           </button>
 
           {!member.verified && (
@@ -174,7 +234,7 @@ export default function Profile() {
               className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95"
               style={{ backgroundColor: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', color: '#fbbf24' }}
             >
-              🪪 Verify Identity
+              {t('profile.verify')}
             </button>
           )}
 
@@ -183,12 +243,12 @@ export default function Profile() {
             className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95"
             style={{ backgroundColor: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171' }}
           >
-            Sign out
+            {t('profile.signOut')}
           </button>
         </div>
 
         <p style={{ color: 'var(--muted)', fontSize: '11px' }} className="text-center pb-2">
-          Nightlight · v0.1 prototype · Drink responsibly
+          {t('profile.footer')}
         </p>
       </div>
     </div>

@@ -1,6 +1,108 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { getMember } from '../lib/member'
 import { MENU, getItemById } from '../data/menu'
+import { VENUES, getVenueById } from '../data/venues'
+import { useLang } from '../lib/i18n'
+
+const VENUE_KEY = 'nl_venue'
+
+// ─── Venue context banner — shown across the order flow ─────────────────────
+function VenueBanner({ venue, onChange }) {
+  const { t } = useLang()
+  if (!venue) return null
+  return (
+    <div
+      style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
+        borderRadius: 14, padding: '10px 12px', marginBottom: 20,
+      }}
+    >
+      <img
+        src={venue.photos[0]}
+        alt={venue.name}
+        style={{ width: 40, height: 40, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
+      />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ color: 'var(--muted)', fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          {t('order.orderingAt')}
+        </div>
+        <div style={{ color: 'var(--text)', fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          📍 {venue.name}
+        </div>
+      </div>
+      {onChange && (
+        <button
+          onClick={onChange}
+          className="nl-press"
+          style={{
+            backgroundColor: 'var(--surface2)', color: 'var(--muted)',
+            border: '1px solid var(--border)', borderRadius: 8,
+            padding: '6px 10px', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0,
+          }}
+        >
+          {t('order.change')}
+        </button>
+      )}
+    </div>
+  )
+}
+
+// ─── Venue picker — shown when the order flow has no venue context ──────────
+function VenuePickerScreen({ onPick, onBack }) {
+  const { t } = useLang()
+  return (
+    <div style={{ backgroundColor: 'var(--bg)', minHeight: '100%', padding: '32px 20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+        <button
+          onClick={onBack}
+          className="nl-press"
+          style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: 22, padding: 0, lineHeight: 1, flexShrink: 0 }}
+        >
+          ←
+        </button>
+        <h1 style={{ color: 'var(--text)', fontSize: 24, fontWeight: 700 }}>
+          {t('order.where')}
+        </h1>
+      </div>
+      <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.5, marginBottom: 24 }}>
+        {t('order.whereSub')}
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {VENUES.map(v => (
+          <button
+            key={v.id}
+            onClick={() => onPick(v)}
+            className="nl-press"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
+              backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
+              borderRadius: 14, padding: 12, cursor: 'pointer', width: '100%',
+            }}
+          >
+            <img
+              src={v.photos[0]}
+              alt={v.name}
+              style={{ width: 52, height: 52, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
+            />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ color: 'var(--text)', fontSize: 14, fontWeight: 700 }}>{v.name}</div>
+              <div style={{ color: 'var(--muted)', fontSize: 11, marginTop: 2 }}>{v.type}</div>
+              <div style={{ color: 'var(--muted)', fontSize: 11, marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {v.address}
+              </div>
+            </div>
+            <span style={{ color: 'var(--muted)', flexShrink: 0 }}>→</span>
+          </button>
+        ))}
+      </div>
+      <p style={{ color: 'var(--muted)', fontSize: 11, textAlign: 'center', marginTop: 20, lineHeight: 1.5 }}>
+        {t('order.whereNote')}
+      </p>
+    </div>
+  )
+}
 
 // ─── Demo friends who "join" the table ───────────────────────────────────────
 const DEMO_FRIENDS = [
@@ -92,17 +194,20 @@ function MemberAvatar({ member, size = 36, active = false, onClick }) {
 }
 
 // ─── SCREEN 1: Home ───────────────────────────────────────────────────────────
-function HomeScreen({ onStart, onJoin }) {
+function HomeScreen({ onStart, onJoin, venue, onChangeVenue }) {
+  const { t } = useLang()
   return (
     <div style={{ backgroundColor: 'var(--bg)', minHeight: '100%', padding: '32px 20px' }}>
-      <div style={{ marginBottom: 32 }}>
+      <div style={{ marginBottom: 20 }}>
         <h1 style={{ color: 'var(--text)', fontSize: 24, fontWeight: 700, marginBottom: 6 }}>
-          Order Together
+          {t('order.title')}
         </h1>
         <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.5 }}>
-          Start a table, let friends join, everyone orders from their phone. One ticket to the bar.
+          {t('order.sub')}
         </p>
       </div>
+
+      <VenueBanner venue={venue} onChange={onChangeVenue} />
 
       {/* How it works */}
       <div
@@ -118,9 +223,9 @@ function HomeScreen({ onStart, onJoin }) {
         }}
       >
         {[
-          { icon: '📲', title: 'Start a table', desc: 'Get a QR code. Friends scan to join.' },
-          { icon: '🛒', title: 'Everyone orders', desc: 'Each person adds drinks to the shared cart.' },
-          { icon: '🍸', title: 'Pick up together', desc: 'One order goes to the bar. Scan when ready.' },
+          { icon: '📲', title: t('order.step1'), desc: t('order.step1d') },
+          { icon: '🛒', title: t('order.step2'), desc: t('order.step2d') },
+          { icon: '🍸', title: t('order.step3'), desc: t('order.step3d') },
         ].map(({ icon, title, desc }) => (
           <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
             <span style={{ fontSize: 22, flexShrink: 0 }}>{icon}</span>
@@ -130,25 +235,6 @@ function HomeScreen({ onStart, onJoin }) {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Free round nudge */}
-      <div
-        style={{
-          backgroundColor: 'rgba(250,204,21,0.07)',
-          border: '1px solid rgba(250,204,21,0.2)',
-          borderRadius: 14,
-          padding: '12px 16px',
-          marginBottom: 24,
-          display: 'flex',
-          gap: 10,
-          alignItems: 'center',
-        }}
-      >
-        <span style={{ fontSize: 20 }}>🎁</span>
-        <p style={{ color: '#fbbf24', fontSize: 12, lineHeight: 1.5, margin: 0 }}>
-          First time? <span style={{ fontWeight: 700 }}>Download Nightlight and your whole table gets a free round.</span>
-        </p>
       </div>
 
       {/* CTAs */}
@@ -167,7 +253,7 @@ function HomeScreen({ onStart, onJoin }) {
             width: '100%',
           }}
         >
-          Start a Table
+          {t('order.start')}
         </button>
         <button
           onClick={onJoin}
@@ -183,7 +269,7 @@ function HomeScreen({ onStart, onJoin }) {
             width: '100%',
           }}
         >
-          Join a Table
+          {t('order.join')}
         </button>
       </div>
     </div>
@@ -279,22 +365,9 @@ function JoinScreen() {
           borderTop: '1px solid rgba(255,255,255,0.06)',
         }}
       >
-        <div
-          style={{
-            backgroundColor: 'rgba(250,204,21,0.07)',
-            border: '1px solid rgba(250,204,21,0.2)',
-            borderRadius: 14,
-            padding: '12px 16px',
-            display: 'flex',
-            gap: 10,
-            alignItems: 'center',
-          }}
-        >
-          <span style={{ fontSize: 18 }}>🎁</span>
-          <p style={{ color: '#fbbf24', fontSize: 12, lineHeight: 1.5, margin: 0 }}>
-            <span style={{ fontWeight: 700 }}>New here?</span> Download Nightlight after ordering — your whole table gets a free round.
-          </p>
-        </div>
+        <p style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5, margin: 0, textAlign: 'center' }}>
+          Ask the host to show their table QR code
+        </p>
       </div>
 
       <style>{`
@@ -306,16 +379,17 @@ function JoinScreen() {
 }
 
 // ─── SCREEN 2: Host QR ────────────────────────────────────────────────────────
-function HostQRScreen({ member, tableMembers, onStart }) {
+function HostQRScreen({ member, tableMembers, venue, onStart }) {
+  const { t } = useLang()
   const ready = tableMembers.length >= 2
 
   return (
     <div style={{ backgroundColor: 'var(--bg)', minHeight: '100%', padding: '32px 20px' }}>
       <h1 style={{ color: 'var(--text)', fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
-        Your Table
+        {t('order.yourTable')}{venue ? ` ${t('order.at')} ${venue.name}` : ''}
       </h1>
       <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 28 }}>
-        Friends scan this to join your order
+        {t('order.scanToJoin')}
       </p>
 
       {/* QR card */}
@@ -428,7 +502,7 @@ function HostQRScreen({ member, tableMembers, onStart }) {
 }
 
 // ─── SCREEN 3: Menu ───────────────────────────────────────────────────────────
-function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeCategory, setActiveCategory, addToCart, removeFromCart, getTotalItems, onViewCart, onBack }) {
+function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeCategory, setActiveCategory, addToCart, removeFromCart, getTotalItems, onViewCart, onBack, venue }) {
   const totalItems = getTotalItems()
   const currentCat = MENU.find(c => c.category === activeCategory)
 
@@ -443,9 +517,13 @@ function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeC
           >
             ←
           </button>
-          <h1 style={{ color: 'var(--text)', fontSize: 20, fontWeight: 700 }}>Table Menu</h1>
+          <h1 style={{ color: 'var(--text)', fontSize: 20, fontWeight: 700 }}>
+            {venue ? venue.name : 'Table Menu'}
+          </h1>
         </div>
-        <p style={{ color: 'var(--muted)', fontSize: 13 }}>Ordering as — pick who you're adding for</p>
+        <p style={{ color: 'var(--muted)', fontSize: 13 }}>
+          {venue ? `📍 ${venue.address.split(',')[0]} · ` : ''}Ordering as — pick who you're adding for
+        </p>
       </div>
 
       {/* Member selector */}
@@ -776,7 +854,8 @@ function CartReviewScreen({ tableMembers, cart, onBack, onPlace }) {
 }
 
 // ─── SCREEN 5: Order Placed ───────────────────────────────────────────────────
-function OrderPlacedScreen({ status }) {
+function OrderPlacedScreen({ status, venue }) {
+  const { t } = useLang()
   const isReady = status === 'ready'
 
   return (
@@ -796,16 +875,18 @@ function OrderPlacedScreen({ status }) {
       </div>
 
       <h1 style={{ color: 'var(--text)', fontSize: 22, fontWeight: 700, marginBottom: 6, textAlign: 'center' }}>
-        {isReady ? 'Your order is ready!' : 'Order received'}
+        {isReady ? t('order.ready') : t('order.received')}
       </h1>
       <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 32, textAlign: 'center' }}>
-        {isReady ? 'Head to the bar and scan to collect' : 'The bar is preparing your drinks'}
+        {isReady
+          ? `${t('order.headToBar')}${venue ? ` ${t('order.at')} ${venue.name}` : ''} ${t('order.scanToCollect')}`
+          : `${venue ? venue.name : t('order.theBar')} ${t('order.preparingDrinks')}`}
       </p>
 
       {/* Status bar */}
       <div style={{ width: '100%', marginBottom: 32 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          {['Order received', 'Preparing', 'Ready'].map((label, i) => {
+          {[t('order.statusReceived'), t('order.statusPreparing'), t('order.statusReady')].map((label, i) => {
             const stepIndex = isReady ? 2 : 1
             const active = i <= stepIndex
             return (
@@ -941,6 +1022,7 @@ function OrderPlacedScreen({ status }) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function GroupOrder() {
+  const navigate = useNavigate()
   const member = getMember()
   const me = {
     id: member?.id || 'me',
@@ -957,6 +1039,30 @@ export default function GroupOrder() {
   const [activeCategory, setActiveCategory] = useState(MENU[0].category)
   const [activeMember, setActiveMember] = useState(me.id)
   const [orderStatus, setOrderStatus] = useState('preparing')
+
+  // Venue context: ?venue= param (from a venue page) > last venue > ask
+  const [searchParams] = useSearchParams()
+  const paramVenue = getVenueById(searchParams.get('venue'))
+  const [venue, setVenue] = useState(
+    () => paramVenue || getVenueById(localStorage.getItem(VENUE_KEY)) || null
+  )
+
+  useEffect(() => {
+    if (paramVenue && paramVenue.id !== venue?.id) {
+      setVenue(paramVenue)
+    }
+    if (venue) localStorage.setItem(VENUE_KEY, venue.id)
+  }, [paramVenue?.id, venue?.id])
+
+  function pickVenue(v) {
+    localStorage.setItem(VENUE_KEY, v.id)
+    setVenue(v)
+  }
+
+  function changeVenue() {
+    localStorage.removeItem(VENUE_KEY)
+    setVenue(null)
+  }
 
   // Demo: auto-join after scanning
   useEffect(() => {
@@ -1007,9 +1113,10 @@ export default function GroupOrder() {
   const getTotalItems = () =>
     Object.values(cart).reduce((t, mc) => t + Object.values(mc).reduce((a, b) => a + b, 0), 0)
 
-  if (step === 'home') return <HomeScreen onStart={() => setStep('qr')} onJoin={() => setStep('join')} />
+  if (!venue) return <VenuePickerScreen onPick={pickVenue} onBack={() => navigate('/venues')} />
+  if (step === 'home') return <HomeScreen onStart={() => setStep('qr')} onJoin={() => setStep('join')} venue={venue} onChangeVenue={changeVenue} />
   if (step === 'join') return <JoinScreen />
-  if (step === 'qr') return <HostQRScreen member={member} tableMembers={tableMembers} onStart={() => { setActiveMember(me.id); setStep('menu') }} />
+  if (step === 'qr') return <HostQRScreen member={member} tableMembers={tableMembers} venue={venue} onStart={() => { setActiveMember(me.id); setStep('menu') }} />
   if (step === 'menu') return (
     <MenuScreen
       tableMembers={tableMembers} cart={cart}
@@ -1017,7 +1124,7 @@ export default function GroupOrder() {
       activeCategory={activeCategory} setActiveCategory={setActiveCategory}
       addToCart={addToCart} removeFromCart={removeFromCart}
       getTotalItems={getTotalItems} onViewCart={() => setStep('cart')}
-      onBack={() => setStep('home')}
+      onBack={() => setStep('home')} venue={venue}
     />
   )
   if (step === 'cart') return (
@@ -1026,52 +1133,7 @@ export default function GroupOrder() {
       onBack={() => setStep('menu')} onPlace={() => setStep('placed')}
     />
   )
-  if (step === 'placed') return (
-    <>
-      <OrderPlacedScreen status={orderStatus} />
-      {/* Free round conversion banner — floats above the screen */}
-      <div
-        style={{
-          position: 'fixed', bottom: 80, left: '50%', transform: 'translateX(-50%)',
-          width: 'calc(100% - 40px)', maxWidth: 390, zIndex: 50,
-          backgroundColor: '#1a1400',
-          border: '1px solid rgba(250,204,21,0.35)',
-          borderRadius: 16,
-          padding: '16px 18px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-          animation: 'slideUp 0.4s ease',
-        }}
-      >
-        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 12 }}>
-          <span style={{ fontSize: 28 }}>🎁</span>
-          <div>
-            <div style={{ color: '#fbbf24', fontSize: 14, fontWeight: 700, marginBottom: 3 }}>
-              Your table gets a free round
-            </div>
-            <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, lineHeight: 1.5 }}>
-              Download Nightlight, create your membership card, and claim a free drink for everyone at the table.
-            </div>
-          </div>
-        </div>
-        <button
-          style={{
-            width: '100%',
-            backgroundColor: '#fbbf24',
-            color: '#0a0800',
-            border: 'none',
-            borderRadius: 10,
-            padding: '12px 0',
-            fontSize: 14,
-            fontWeight: 800,
-            cursor: 'pointer',
-          }}
-        >
-          Download Nightlight — Free Round 🍸
-        </button>
-      </div>
-      <style>{`@keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }`}</style>
-    </>
-  )
+  if (step === 'placed') return <OrderPlacedScreen status={orderStatus} venue={venue} />
 
   return null
 }

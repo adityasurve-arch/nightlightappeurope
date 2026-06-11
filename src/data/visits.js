@@ -3,8 +3,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V001',
     date: '2025-05-14',
-    venueName: 'Bar Marsella',
-    city: 'Barcelona',
+    venueName: 'Le Cercle',
+    city: 'Paris',
     drinks: [
       { name: 'Jameson on the Rocks', brand: 'Jameson', category: 'Whisky' },
       { name: 'Beefeater G&T', brand: 'Beefeater', category: 'Gin' },
@@ -26,8 +26,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V003',
     date: '2025-05-07',
-    venueName: 'Nottingham Forest',
-    city: 'Milan',
+    venueName: 'Maison Noire',
+    city: 'Paris',
     drinks: [
       { name: 'Absolut Mule', brand: 'Absolut', category: 'Vodka' },
       { name: 'Malibu Colada', brand: 'Malibu', category: 'Rum' },
@@ -39,8 +39,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V004',
     date: '2025-05-03',
-    venueName: 'Xantippe',
-    city: 'Vienna',
+    venueName: 'Le Quartier Latin',
+    city: 'Paris',
     drinks: [
       { name: 'Ballantine\'s & Soda', brand: 'Ballantine\'s', category: 'Whisky' },
       { name: 'Lillet Blanc Spritz', brand: 'Lillet', category: 'Aperitif' },
@@ -51,8 +51,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V005',
     date: '2025-04-28',
-    venueName: 'Park Bar',
-    city: 'Lisbon',
+    venueName: 'Canal Social Club',
+    city: 'Paris',
     drinks: [
       { name: 'Beefeater Pink Tonic', brand: 'Beefeater', category: 'Gin' },
     ],
@@ -62,8 +62,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V006',
     date: '2025-04-22',
-    venueName: 'El Xampanyet',
-    city: 'Barcelona',
+    venueName: 'Brasserie Lumière',
+    city: 'Paris',
     drinks: [
       { name: 'Olmeca Margarita', brand: 'Olmeca', category: 'Tequila' },
       { name: 'Malibu Sunrise', brand: 'Malibu', category: 'Rum' },
@@ -87,8 +87,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V008',
     date: '2025-04-14',
-    venueName: 'Bhangrabar',
-    city: 'Milan',
+    venueName: 'Le Cercle',
+    city: 'Paris',
     drinks: [
       { name: 'Chivas Cola', brand: 'Chivas Regal', category: 'Whisky' },
     ],
@@ -98,8 +98,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V009',
     date: '2025-04-09',
-    venueName: 'Loos Bar',
-    city: 'Vienna',
+    venueName: 'Maison Noire',
+    city: 'Paris',
     drinks: [
       { name: 'Ballantine\'s Old Fashioned', brand: 'Ballantine\'s', category: 'Whisky' },
       { name: 'Beefeater Negroni', brand: 'Beefeater', category: 'Gin' },
@@ -110,8 +110,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V010',
     date: '2025-04-04',
-    venueName: 'Pensão Amor',
-    city: 'Lisbon',
+    venueName: 'Le Quartier Latin',
+    city: 'Paris',
     drinks: [
       { name: 'Absolut Berry Sour', brand: 'Absolut', category: 'Vodka' },
       { name: 'Lillet Rosé Spritz', brand: 'Lillet', category: 'Aperitif' },
@@ -122,8 +122,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V011',
     date: '2025-03-29',
-    venueName: 'Bar Calders',
-    city: 'Barcelona',
+    venueName: 'Canal Social Club',
+    city: 'Paris',
     drinks: [
       { name: 'Olmeca Paloma', brand: 'Olmeca', category: 'Tequila' },
     ],
@@ -145,8 +145,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V013',
     date: '2025-03-17',
-    venueName: 'Dry Milano',
-    city: 'Milan',
+    venueName: 'Brasserie Lumière',
+    city: 'Paris',
     drinks: [
       { name: 'Absolut Spritz', brand: 'Absolut', category: 'Vodka' },
       { name: 'Malibu Punch', brand: 'Malibu', category: 'Rum' },
@@ -158,8 +158,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V014',
     date: '2025-03-11',
-    venueName: 'Dachboden',
-    city: 'Vienna',
+    venueName: 'Le Cercle',
+    city: 'Paris',
     drinks: [
       { name: 'Ballantine\'s Highball', brand: 'Ballantine\'s', category: 'Whisky' },
     ],
@@ -169,8 +169,8 @@ export const SYNTHETIC_VISITS = [
   {
     id: 'V015',
     date: '2025-03-05',
-    venueName: 'Foxtrot Oscar',
-    city: 'Lisbon',
+    venueName: 'Maison Noire',
+    city: 'Paris',
     drinks: [
       { name: 'Beefeater Bramble', brand: 'Beefeater', category: 'Gin' },
       { name: 'Lillet Tonic', brand: 'Lillet', category: 'Aperitif' },
@@ -180,4 +180,4 @@ export const SYNTHETIC_VISITS = [
   },
 ]
 
-export const VISIT_CITIES = ['All', 'Paris', 'Milan', 'Barcelona', 'Vienna', 'Lisbon']
+export const VISIT_CITIES = ['All', 'Paris']

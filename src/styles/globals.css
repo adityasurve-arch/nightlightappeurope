@@ -6,9 +6,62 @@
   --surface2: #24242A;
   --accent: #534AB7;
   --accent-hover: #6A61D0;
+  --accent-soft: rgba(83, 74, 183, 0.14);
+  --accent-glow: rgba(83, 74, 183, 0.45);
+  --accent-light: #9B93E8;
   --text: #F0F0F5;
   --muted: #8888A0;
   --border: #2E2E38;
+  /* Conversion moments only — free rounds, urgency, unlocks */
+  --amber: #FBBF24;
+  --amber-soft: rgba(250, 204, 21, 0.08);
+  --amber-border: rgba(250, 204, 21, 0.25);
+  /* Tier metals */
+  --tier-bronze: #C4843A;
+  --tier-silver: #8C9FD4;
+  --tier-gold: #E8B923;
+  --success: #4ADE80;
+}
+
+/* ── Shared micro-interactions ── */
+@keyframes nl-slide-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes nl-pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes nl-glow {
+  0%, 100% { box-shadow: 0 0 18px var(--accent-glow); }
+  50%      { box-shadow: 0 0 34px var(--accent-glow), 0 0 60px rgba(83,74,183,0.2); }
+}
+@keyframes nl-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes nl-pulse-dot {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+
+.nl-slide-up { animation: nl-slide-up 0.4s ease both; }
+.nl-pop      { animation: nl-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.nl-glow     { animation: nl-glow 2.4s ease-in-out infinite; }
+
+/* Press feedback for every tappable element */
+.nl-press { transition: transform 0.12s ease, opacity 0.12s ease; }
+.nl-press:active { transform: scale(0.96); opacity: 0.9; }
+
+/* Shimmer text for premium moments (tier-up, Gold) */
+.nl-shimmer-text {
+  background: linear-gradient(90deg, var(--text) 40%, var(--tier-gold) 50%, var(--text) 60%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: nl-shimmer 2.8s linear infinite;
 }
 
 * {

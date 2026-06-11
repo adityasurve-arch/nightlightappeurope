@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { getMember } from './lib/member'
+import { LanguageProvider } from './lib/i18n'
 import BottomNav from './components/BottomNav'
 import Landing from './pages/Landing'
 import SignUp from './pages/SignUp'
@@ -9,6 +10,7 @@ import Venues from './pages/Venues'
 import History from './pages/History'
 import Profile from './pages/Profile'
 import GroupOrder from './pages/GroupOrder'
+import VenueDetail from './pages/VenueDetail'
 
 function RequireAuth({ children }) {
   return getMember() ? children : <Navigate to="/" replace />
@@ -28,6 +30,7 @@ function ProtectedLayout({ children }) {
 export default function App() {
   return (
     <div className="app-shell">
+      <LanguageProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -80,9 +83,18 @@ export default function App() {
               </RequireAuth>
             }
           />
+          <Route
+            path="/venues/:id"
+            element={
+              <RequireAuth>
+                <VenueDetail />
+              </RequireAuth>
+            }
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
+      </LanguageProvider>
     </div>
   )
 }

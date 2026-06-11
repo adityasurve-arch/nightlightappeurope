@@ -5,11 +5,12 @@ import TierBadge from '../components/TierBadge'
 import ProgressBar from '../components/ProgressBar'
 import { getMember } from '../lib/member'
 import { getTier, getNextTier, progressToNextTier } from '../data/rewards'
+import { useLang } from '../lib/i18n'
 
 const QUICK_LINKS = [
-  { to: '/rewards', icon: '⭐', label: 'Rewards', desc: 'Points & perks' },
-  { to: '/venues', icon: '📍', label: 'Venues', desc: 'Find a bar' },
-  { to: '/history', icon: '🕐', label: 'History', desc: 'Visit log' },
+  { to: '/rewards', icon: '⭐', labelKey: 'dash.rewards', descKey: 'dash.rewardsDesc' },
+  { to: '/venues', icon: '📍', labelKey: 'dash.venues', descKey: 'dash.venuesDesc' },
+  { to: '/history', icon: '🕐', labelKey: 'dash.history', descKey: 'dash.historyDesc' },
 ]
 
 export default function Dashboard() {
@@ -18,6 +19,7 @@ export default function Dashboard() {
   const nextTier = getNextTier(member.points)
   const progress = progressToNextTier(member.points)
   const [walletModal, setWalletModal] = useState(false)
+  const { t, lang } = useLang()
 
   return (
     <div style={{ backgroundColor: 'var(--bg)' }} className="min-h-screen">
@@ -25,16 +27,26 @@ export default function Dashboard() {
         {/* Greeting */}
         <div>
           <h1 style={{ color: 'var(--text)' }} className="text-xl font-bold">
-            Welcome back, {member.firstName} 👋
+            {t('dash.welcome')}, {member.firstName} 👋
           </h1>
           <p style={{ color: 'var(--muted)' }} className="text-sm mt-0.5">
-            {member.city} member since{' '}
-            {new Date(member.signupDate).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+            {member.city} · {t('dash.memberSince')}{' '}
+            {new Date(member.signupDate).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { month: 'long', year: 'numeric' })}
           </p>
         </div>
 
         {/* Member Card */}
         <MemberCard member={member} />
+
+        {/* Primary action — the revenue feature gets the hero spot */}
+        <Link
+          to="/order"
+          className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl font-bold text-base nl-press nl-glow"
+          style={{ backgroundColor: 'var(--accent)', color: 'white', textDecoration: 'none' }}
+        >
+          <span className="text-xl">🍸</span>
+          {t('dash.orderTable')}
+        </Link>
 
         {/* Apple Wallet button */}
         <button
@@ -131,7 +143,7 @@ export default function Dashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <div style={{ color: 'var(--muted)' }} className="text-xs mb-0.5">Your points</div>
+              <div style={{ color: 'var(--muted)' }} className="text-xs mb-0.5">{t('dash.yourPoints')}</div>
               <div style={{ color: 'var(--text)' }} className="text-2xl font-bold">{member.points}</div>
             </div>
             <TierBadge tier={tier} size="md" />
@@ -142,33 +154,82 @@ export default function Dashboard() {
               <ProgressBar percent={progress} color={tier.color} />
               <div className="flex justify-between text-xs" style={{ color: 'var(--muted)' }}>
                 <span>{tier.name}</span>
-                <span>{nextTier.min - member.points} pts to {nextTier.icon} {nextTier.name}</span>
+                <span>{nextTier.min - member.points} {t('dash.ptsTo')} {nextTier.icon} {nextTier.name}</span>
               </div>
+              {/* Visits-away framing — only motivating when the target is close */}
+              {(() => {
+                const nights = Math.max(1, Math.ceil((nextTier.min - member.points) / 25))
+                return nights <= 8 ? (
+                  <div
+                    className="rounded-lg px-3 py-2 text-xs font-medium"
+                    style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent-light)' }}
+                  >
+                    ⚡ {t('dash.nightsAway1')} {nights} {nights === 1 ? t('dash.night') : t('dash.nights')} {t('dash.nightsAway2')} {nextTier.name} {t('dash.soClose')}
+                  </div>
+                ) : (
+                  <div
+                    className="rounded-lg px-3 py-2 text-xs font-medium"
+                    style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent-light)' }}
+                  >
+                    ⚡ {t('dash.groupTip')}
+                  </div>
+                )
+              })()}
             </>
           ) : (
-            <div style={{ color: 'var(--muted)' }} className="text-xs">
-              You're at the highest tier. Enjoy your Gold benefits! 🎉
+            <div className="nl-shimmer-text text-xs font-semibold">
+              {t('dash.goldTier')}
             </div>
           )}
         </div>
 
+        {/* Crew activity — social FOMO loop */}
+        <Link
+          to="/profile?section=crew"
+          className="rounded-xl p-4 flex items-center gap-3 nl-press"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', textDecoration: 'none' }}
+        >
+          <div className="flex -space-x-2 flex-shrink-0">
+            {[
+              { initials: 'SR', color: 'var(--tier-gold)' },
+              { initials: 'LB', color: 'var(--tier-silver)' },
+              { initials: 'EM', color: 'var(--tier-bronze)' },
+            ].map(({ initials, color }) => (
+              <div
+                key={initials}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold"
+                style={{ backgroundColor: 'var(--surface2)', border: `1.5px solid ${color}`, color: 'var(--text)' }}
+              >
+                {initials}
+              </div>
+            ))}
+          </div>
+          <div className="flex-1">
+            <div style={{ color: 'var(--text)' }} className="text-sm font-semibold">{t('dash.crewOut')}</div>
+            <div style={{ color: 'var(--muted)' }} className="text-xs mt-0.5">
+              {t('dash.crewEarned')} <span style={{ color: 'var(--accent-light)' }} className="font-semibold">150 pts</span> {t('dash.together')}
+            </div>
+          </div>
+          <span style={{ color: 'var(--muted)' }}>→</span>
+        </Link>
+
         {/* Quick links */}
         <div>
           <h2 style={{ color: 'var(--muted)' }} className="text-xs font-semibold tracking-widest uppercase mb-3">
-            Quick access
+            {t('dash.quickAccess')}
           </h2>
           <div className="grid grid-cols-3 gap-3">
-            {QUICK_LINKS.map(({ to, icon, label, desc }) =>
+            {QUICK_LINKS.map(({ to, icon, labelKey, descKey }) =>
               to ? (
                 <Link
-                  key={label}
+                  key={labelKey}
                   to={to}
                   className="rounded-xl p-4 flex flex-col gap-1.5 transition-transform hover:-translate-y-0.5 text-center"
                   style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
                 >
                   <span className="text-2xl">{icon}</span>
-                  <span style={{ color: 'var(--text)' }} className="text-xs font-semibold">{label}</span>
-                  <span style={{ color: 'var(--muted)' }} className="text-xs">{desc}</span>
+                  <span style={{ color: 'var(--text)' }} className="text-xs font-semibold">{t(labelKey)}</span>
+                  <span style={{ color: 'var(--muted)' }} className="text-xs">{t(descKey)}</span>
                 </Link>
               ) : null
             )}
@@ -182,8 +243,8 @@ export default function Dashboard() {
         >
           <span className="text-xl">💡</span>
           <p style={{ color: 'var(--muted)' }} className="text-xs leading-relaxed">
-            Earn <span style={{ color: '#9B93E8' }} className="font-semibold">10 pts</span> per venue visit ·{' '}
-            <span style={{ color: '#9B93E8' }} className="font-semibold">5 pts</span> per drink ordered
+            {t('dash.earn')} <span style={{ color: '#9B93E8' }} className="font-semibold">10 pts</span> {t('dash.perVisit')} ·{' '}
+            <span style={{ color: '#9B93E8' }} className="font-semibold">5 pts</span> {t('dash.perDrink')}
           </p>
         </div>
       </div>

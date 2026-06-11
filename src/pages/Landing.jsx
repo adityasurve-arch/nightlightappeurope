@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getMember, saveMember } from '../lib/member'
+import { useLang } from '../lib/i18n'
 
 const DEMO_MEMBER = {
   firstName: 'Aditya',
@@ -16,40 +17,64 @@ const DEMO_MEMBER = {
 }
 
 const FEATURES = [
-  {
-    icon: '💳',
-    title: 'Digital Membership Card',
-    desc: 'Your personal card tied to your city, tier, and identity — always in your pocket.',
-  },
-  {
-    icon: '⭐',
-    title: 'Rewards & Points',
-    desc: 'Earn points every visit, unlock Bronze → Silver → Gold perks, get complimentary drinks.',
-  },
-  {
-    icon: '📍',
-    title: 'Partner Venues',
-    desc: 'Exclusive access to curated bars across Paris, Milan, Barcelona, Vienna and Lisbon.',
-  },
+  { icon: '💳', key: 'feature1' },
+  { icon: '⭐', key: 'feature2' },
+  { icon: '📍', key: 'feature3' },
 ]
 
-const STATS = [
-  { value: '25K', label: 'Members' },
-  { value: '5', label: 'Cities' },
-  { value: '15', label: 'Venues' },
-]
+// First-launch overlay: pick French or English before anything else
+function LanguagePicker({ onPick }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center px-8"
+      style={{ backgroundColor: 'var(--bg)' }}
+    >
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 nl-pop"
+        style={{ backgroundColor: 'var(--accent)' }}
+      >
+        <span className="text-white text-lg font-bold">NL</span>
+      </div>
+      <h1 style={{ color: 'var(--text)' }} className="text-xl font-bold mb-1 text-center">
+        Choose your language
+      </h1>
+      <p style={{ color: 'var(--muted)' }} className="text-sm mb-8 text-center">
+        Choisissez votre langue
+      </p>
+      <div className="flex flex-col gap-3 w-full max-w-xs">
+        <button
+          onClick={() => onPick('fr')}
+          className="w-full py-4 rounded-2xl font-semibold text-base nl-press flex items-center justify-center gap-3"
+          style={{ backgroundColor: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer' }}
+        >
+          🇫🇷 Français
+        </button>
+        <button
+          onClick={() => onPick('en')}
+          className="w-full py-4 rounded-2xl font-semibold text-base nl-press flex items-center justify-center gap-3"
+          style={{ backgroundColor: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)', cursor: 'pointer' }}
+        >
+          🇬🇧 English
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export default function Landing() {
   const navigate = useNavigate()
+  const { t, hasChosen, setLang } = useLang()
 
   useEffect(() => {
-    if (getMember()) navigate('/dashboard', { replace: true })
+    if (getMember()) navigate('/venues', { replace: true })
   }, [])
 
   function handleDemo() {
     saveMember(DEMO_MEMBER)
-    navigate('/dashboard', { replace: true })
+    navigate('/venues', { replace: true })
   }
+
+  if (!hasChosen) return <LanguagePicker onPick={setLang} />
 
   return (
     <div style={{ backgroundColor: 'var(--bg)' }} className="min-h-screen flex flex-col">
@@ -72,7 +97,7 @@ export default function Landing() {
           className="text-xs font-semibold px-3 py-1.5 rounded-lg"
           style={{ backgroundColor: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border)' }}
         >
-          Sign in
+          {t('landing.signin')}
         </button>
       </header>
 
@@ -84,26 +109,46 @@ export default function Landing() {
           style={{ backgroundColor: 'rgba(83,74,183,0.15)', color: '#9B93E8', border: '1px solid rgba(83,74,183,0.25)' }}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          Now live across 5 European cities
+          {t('landing.badge')}
         </div>
 
         {/* Headline */}
-        <h1 style={{ color: 'var(--text)' }} className="text-3xl font-bold leading-snug mb-3">
-          Drink smarter.<br />
-          <span style={{ color: 'var(--accent)' }}>Belong to the&nbsp;network.</span>
+        <h1 style={{ color: 'var(--text)' }} className="text-4xl font-extrabold leading-tight mb-3 nl-slide-up">
+          {t('landing.headline1')}<br />
+          {t('landing.headline2')}<br />
+          <span className="nl-shimmer-text">{t('landing.headline3')}</span>
         </h1>
 
-        <p style={{ color: 'var(--muted)' }} className="text-sm leading-relaxed mb-8">
-          Join 25,000 members across Paris, Milan, Barcelona, Vienna and Lisbon. Get your digital membership card, earn rewards, and unlock exclusive access.
+        <p style={{ color: 'var(--muted)' }} className="text-sm leading-relaxed mb-3">
+          {t('landing.sub')}
         </p>
+
+        {/* Tier ladder preview */}
+        <div className="flex items-center gap-2 mb-8">
+          {[
+            { name: 'Bronze', color: 'var(--tier-bronze)' },
+            { name: 'Silver', color: 'var(--tier-silver)' },
+            { name: 'Gold', color: 'var(--tier-gold)' },
+          ].map(({ name, color }, i) => (
+            <div key={name} className="flex items-center gap-2">
+              {i > 0 && <span style={{ color: 'var(--muted)' }} className="text-xs">→</span>}
+              <span
+                className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                style={{ color, border: `1px solid ${i === 2 ? 'var(--tier-gold)' : 'var(--border)'}`, backgroundColor: 'var(--surface)' }}
+              >
+                {name}
+              </span>
+            </div>
+          ))}
+        </div>
 
         {/* Primary CTA */}
         <Link
           to="/signup"
-          className="w-full py-4 rounded-2xl font-semibold text-sm text-center transition-all active:scale-95 mb-3"
+          className="w-full py-4 rounded-2xl font-bold text-base text-center nl-press nl-glow mb-3"
           style={{ backgroundColor: 'var(--accent)', color: 'white' }}
         >
-          Get your free membership card →
+          {t('landing.cta')}
         </Link>
 
         {/* Demo CTA */}
@@ -112,7 +157,7 @@ export default function Landing() {
           className="w-full py-3.5 rounded-2xl font-semibold text-sm text-center transition-all active:scale-95 mb-3"
           style={{ backgroundColor: 'rgba(83,74,183,0.12)', color: '#9B93E8', border: '1px solid rgba(83,74,183,0.3)' }}
         >
-          View demo — no sign up needed
+          {t('landing.demo')}
         </button>
 
         {/* Secondary CTA */}
@@ -121,41 +166,21 @@ export default function Landing() {
           className="w-full py-3.5 rounded-2xl font-semibold text-sm text-center transition-colors mb-8"
           style={{ color: 'var(--muted)', border: '1px solid var(--border)' }}
         >
-          Browse venues
+          {t('landing.browse')}
         </Link>
-
-        {/* Stats row */}
-        <div
-          className="grid grid-cols-3 rounded-2xl overflow-hidden mb-8"
-          style={{ border: '1px solid var(--border)' }}
-        >
-          {STATS.map(({ value, label }, i) => (
-            <div
-              key={label}
-              className="flex flex-col items-center justify-center py-4"
-              style={{
-                backgroundColor: 'var(--surface)',
-                borderRight: i < 2 ? '1px solid var(--border)' : 'none',
-              }}
-            >
-              <div style={{ color: 'var(--text)' }} className="text-xl font-bold">{value}</div>
-              <div style={{ color: 'var(--muted)' }} className="text-xs mt-0.5">{label}</div>
-            </div>
-          ))}
-        </div>
 
         {/* Feature cards */}
         <div className="flex flex-col gap-3 mb-8">
-          {FEATURES.map(({ icon, title, desc }) => (
+          {FEATURES.map(({ icon, key }) => (
             <div
-              key={title}
+              key={key}
               className="rounded-2xl p-4 flex items-start gap-4"
               style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
             >
               <span className="text-2xl flex-shrink-0 mt-0.5">{icon}</span>
               <div>
-                <div style={{ color: 'var(--text)' }} className="font-semibold text-sm mb-1">{title}</div>
-                <div style={{ color: 'var(--muted)' }} className="text-xs leading-relaxed">{desc}</div>
+                <div style={{ color: 'var(--text)' }} className="font-semibold text-sm mb-1">{t(`landing.${key}.title`)}</div>
+                <div style={{ color: 'var(--muted)' }} className="text-xs leading-relaxed">{t(`landing.${key}.desc`)}</div>
               </div>
             </div>
           ))}
@@ -165,7 +190,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="px-5 py-5 text-center" style={{ borderTop: '1px solid var(--border)' }}>
         <p style={{ color: 'var(--muted)', fontSize: '11px' }} className="opacity-60">
-          Nightlight · Drink responsibly
+          {t('landing.footer')}
         </p>
       </footer>
     </div>
