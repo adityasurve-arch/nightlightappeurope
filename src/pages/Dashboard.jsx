@@ -6,6 +6,7 @@ import ProgressBar from '../components/ProgressBar'
 import { getMember } from '../lib/member'
 import { getTier, getNextTier, progressToNextTier } from '../data/rewards'
 import { useLang } from '../lib/i18n'
+import { EVENTS } from '../data/events'
 
 const QUICK_LINKS = [
   { to: '/rewards', icon: '⭐', labelKey: 'dash.rewards', descKey: 'dash.rewardsDesc' },
@@ -212,6 +213,61 @@ export default function Dashboard() {
           </div>
           <span style={{ color: 'var(--muted)' }}>→</span>
         </Link>
+
+        {/* Event invite card */}
+        {EVENTS.length > 0 && (() => {
+          const ev = EVENTS[0]
+          const evDate = new Date(ev.date)
+          return (
+            <Link
+              to={`/events/${ev.id}`}
+              className="block rounded-2xl overflow-hidden nl-press"
+              style={{ textDecoration: 'none', border: '1px solid rgba(200,162,75,0.3)' }}
+            >
+              {/* Thin amber top bar */}
+              <div style={{ height: 3, backgroundColor: '#C8A24B' }} />
+              <div className="relative">
+                <img
+                  src={ev.heroImage}
+                  alt={ev.eventName}
+                  className="w-full object-cover"
+                  style={{ height: 100 }}
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: 'linear-gradient(to right, rgba(14,14,16,0.85) 40%, rgba(14,14,16,0.3) 100%)' }}
+                />
+                <div className="absolute inset-0 flex items-center px-4 gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span
+                        className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: 'rgba(200,162,75,0.2)', color: '#C8A24B', border: '1px solid rgba(200,162,75,0.3)' }}
+                      >
+                        You're invited
+                      </span>
+                    </div>
+                    <div style={{ color: 'white' }} className="text-sm font-bold leading-tight truncate">
+                      {ev.eventName}
+                    </div>
+                    <div style={{ color: 'rgba(255,255,255,0.65)' }} className="text-xs mt-0.5">
+                      {evDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })} · {ev.time} · {ev.venue}
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0 flex flex-col items-center gap-1">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+                      style={{ backgroundColor: 'rgba(200,162,75,0.2)', border: '1px solid rgba(200,162,75,0.3)' }}
+                    >
+                      🥃
+                    </div>
+                    <span style={{ color: '#C8A24B', fontSize: '10px' }} className="font-semibold">{ev.spotsLeft} left</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )
+        })()}
 
         {/* Quick links */}
         <div>

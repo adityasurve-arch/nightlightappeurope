@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { SYNTHETIC_VISITS, VISIT_CITIES } from '../data/visits'
 import { NETWORK_MEMBERS, TIER_COLORS, findMembers } from '../data/networkMembers'
 import { getCompanions, setVisitCompanions } from '../lib/member'
+import { useLang } from '../lib/i18n'
 
 const CITY_COLORS = {
   Paris: '#B08C5A',

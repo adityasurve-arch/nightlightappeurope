@@ -11,6 +11,7 @@ import History from './pages/History'
 import Profile from './pages/Profile'
 import GroupOrder from './pages/GroupOrder'
 import VenueDetail from './pages/VenueDetail'
+import EventDetail from './pages/EventDetail'
 
 function RequireAuth({ children }) {
   return getMember() ? children : <Navigate to="/" replace />
@@ -88,6 +89,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <VenueDetail />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/events/:id"
+            element={
+              <RequireAuth>
+                <EventDetail />
               </RequireAuth>
             }
           />
