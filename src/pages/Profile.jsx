@@ -218,6 +218,25 @@ export default function Profile() {
           )}
         </div>
 
+        {/* Quarter brand dashboard */}
+        <button
+          onClick={() => navigate('/quarter')}
+          className="w-full flex items-center gap-3 px-4 py-3.5 text-left rounded-2xl nl-press"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', cursor: 'pointer' }}
+        >
+          <span
+            className="text-xs font-bold flex-shrink-0 rounded-md px-1.5 py-0.5"
+            style={{ backgroundColor: '#534AB7', color: 'white' }}
+          >
+            Q
+          </span>
+          <div className="flex-1">
+            <div style={{ color: 'var(--text)' }} className="text-sm font-medium">Quarter · Brand dashboard</div>
+            <div style={{ color: 'var(--muted)', fontSize: '11px' }}>Network insights for partner brands</div>
+          </div>
+          <span style={{ color: 'var(--muted)' }}>→</span>
+        </button>
+
         {/* Actions */}
         <div className="flex flex-col gap-3">
           <button
