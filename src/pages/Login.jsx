@@ -58,7 +58,7 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center">
           <div style={{ color: 'var(--accent)' }} className="text-3xl font-bold tracking-tight mb-1">
-            NIGHTLIGHT
+            QUARTER
           </div>
           <p style={{ color: 'var(--muted)' }} className="text-sm">
             Sign in to your account

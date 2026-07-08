@@ -10,7 +10,7 @@ const CITY_COLORS = {
 
 export default function MemberCard({ member }) {
   const tier = getTier(member.points || 0)
-  const cityColor = CITY_COLORS[member.city] || '#534AB7'
+  const cityColor = CITY_COLORS[member.city] || '#C8922A'
 
   return (
     <div
@@ -31,8 +31,8 @@ export default function MemberCard({ member }) {
       {/* Header row */}
       <div className="absolute top-4 left-5 right-5 flex items-start justify-between">
         <div>
-          <div className="text-white font-bold text-sm tracking-wider opacity-90">NIGHTLIGHT</div>
-          <div className="text-white text-xs opacity-50 tracking-widest">NIGHTLIGHT</div>
+          <div className="text-white font-bold text-sm tracking-wider opacity-90">QUARTER</div>
+          <div className="text-white text-xs opacity-50 tracking-widest">QUARTER</div>
         </div>
         <span
           className="text-xs font-semibold px-2 py-0.5 rounded-full"
