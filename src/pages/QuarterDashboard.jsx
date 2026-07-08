@@ -326,7 +326,7 @@ function CampaignsView() {
           <div className="qd-kpi-sub">{f.optedIn} guests shared their name</div>
         </div>
         <div className="qd-kpi" style={{ borderColor: 'rgba(29,158,117,0.3)' }}>
-          <div className="qd-kpi-label">Revenue to Nightlight</div>
+          <div className="qd-kpi-label">Revenue to Quarter</div>
           <div className="qd-kpi-value" style={{ color: '#1D9E75' }}>€{f.rsvpd * 12}</div>
           <div className="qd-kpi-sub">{campaign.billing}</div>
         </div>

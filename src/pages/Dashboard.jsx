@@ -81,7 +81,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <div style={{ color: 'var(--text)' }} className="font-semibold text-sm">Apple Wallet</div>
-                  <div style={{ color: 'var(--muted)' }} className="text-xs">Nightlight Card</div>
+                  <div style={{ color: 'var(--muted)' }} className="text-xs">Quarter Card</div>
                 </div>
               </div>
 
@@ -105,7 +105,7 @@ export default function Dashboard() {
 
               <div
                 className="rounded-xl px-3 py-2.5 text-xs leading-relaxed"
-                style={{ backgroundColor: 'rgba(83,74,183,0.1)', border: '1px solid rgba(83,74,183,0.2)', color: '#9B93E8' }}
+                style={{ backgroundColor: 'rgba(200,146,42,0.1)', border: '1px solid rgba(200,146,42,0.2)', color: '#DBA84E' }}
               >
                 ℹ Generating the pass requires an Apple Developer certificate and a backend signing service. This will be live when the iOS app launches.
               </div>
@@ -295,12 +295,12 @@ export default function Dashboard() {
         {/* Earning hint */}
         <div
           className="rounded-xl px-4 py-3 flex items-center gap-3"
-          style={{ backgroundColor: 'rgba(83,74,183,0.08)', border: '1px solid rgba(83,74,183,0.2)' }}
+          style={{ backgroundColor: 'rgba(200,146,42,0.08)', border: '1px solid rgba(200,146,42,0.2)' }}
         >
           <span className="text-xl">💡</span>
           <p style={{ color: 'var(--muted)' }} className="text-xs leading-relaxed">
-            {t('dash.earn')} <span style={{ color: '#9B93E8' }} className="font-semibold">10 pts</span> {t('dash.perVisit')} ·{' '}
-            <span style={{ color: '#9B93E8' }} className="font-semibold">5 pts</span> {t('dash.perDrink')}
+            {t('dash.earn')} <span style={{ color: '#DBA84E' }} className="font-semibold">10 pts</span> {t('dash.perVisit')} ·{' '}
+            <span style={{ color: '#DBA84E' }} className="font-semibold">5 pts</span> {t('dash.perDrink')}
           </p>
         </div>
       </div>

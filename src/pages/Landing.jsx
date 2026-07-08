@@ -90,7 +90,7 @@ export default function Landing() {
           >
             <span className="text-white text-xs font-bold">NL</span>
           </div>
-          <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Nightlight</span>
+          <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Quarter</span>
         </div>
         <button
           onClick={handleDemo}
@@ -106,7 +106,7 @@ export default function Landing() {
         {/* Live badge */}
         <div
           className="self-start inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs mb-6"
-          style={{ backgroundColor: 'rgba(83,74,183,0.15)', color: '#9B93E8', border: '1px solid rgba(83,74,183,0.25)' }}
+          style={{ backgroundColor: 'rgba(200,146,42,0.15)', color: '#DBA84E', border: '1px solid rgba(200,146,42,0.25)' }}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
           {t('landing.badge')}
@@ -155,7 +155,7 @@ export default function Landing() {
         <button
           onClick={handleDemo}
           className="w-full py-3.5 rounded-2xl font-semibold text-sm text-center transition-all active:scale-95 mb-3"
-          style={{ backgroundColor: 'rgba(83,74,183,0.12)', color: '#9B93E8', border: '1px solid rgba(83,74,183,0.3)' }}
+          style={{ backgroundColor: 'rgba(200,146,42,0.12)', color: '#DBA84E', border: '1px solid rgba(200,146,42,0.3)' }}
         >
           {t('landing.demo')}
         </button>

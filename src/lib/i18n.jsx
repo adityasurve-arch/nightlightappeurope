@@ -20,7 +20,7 @@ const STRINGS = {
     'landing.feature2.desc': 'Earn points every visit, unlock Bronze → Silver → Gold perks, get complimentary drinks.',
     'landing.feature3.title': 'Partner Venues',
     'landing.feature3.desc': 'Exclusive access to a curated network of bars across Paris.',
-    'landing.footer': 'Nightlight · Drink responsibly',
+    'landing.footer': 'Quarter · Drink responsibly',
     // Nav
     'nav.venues': 'Venues',
     'nav.order': 'Order',
@@ -49,7 +49,7 @@ const STRINGS = {
     'profile.edit': '✏️ Edit profile — coming soon',
     'profile.verify': '🪪 Verify Identity',
     'profile.signOut': 'Sign out',
-    'profile.footer': 'Nightlight · v0.1 prototype · Drink responsibly',
+    'profile.footer': 'Quarter · v0.1 prototype · Drink responsibly',
     // Order flow
     'order.title': 'Order Together',
     'order.sub': 'Start a table, let friends join, everyone orders from their phone. One ticket to the bar.',
@@ -164,7 +164,7 @@ const STRINGS = {
     'landing.feature2.desc': 'Gagnez des points à chaque visite, débloquez les avantages Bronze → Silver → Gold, recevez des boissons offertes.',
     'landing.feature3.title': 'Bars partenaires',
     'landing.feature3.desc': 'Accès exclusif à un réseau sélectionné de bars dans tout Paris.',
-    'landing.footer': 'Nightlight · À consommer avec modération',
+    'landing.footer': 'Quarter · À consommer avec modération',
     // Nav
     'nav.venues': 'Bars',
     'nav.order': 'Commander',
@@ -193,7 +193,7 @@ const STRINGS = {
     'profile.edit': '✏️ Modifier le profil — bientôt disponible',
     'profile.verify': '🪪 Vérifier l’identité',
     'profile.signOut': 'Se déconnecter',
-    'profile.footer': 'Nightlight · prototype v0.1 · À consommer avec modération',
+    'profile.footer': 'Quarter · prototype v0.1 · À consommer avec modération',
     // Order flow
     'order.title': 'Commandez ensemble',
     'order.sub': 'Ouvrez une table, vos amis la rejoignent, chacun commande depuis son téléphone. Un seul ticket pour le bar.',
@@ -281,7 +281,7 @@ const STRINGS = {
     'rewards.highest': 'Vous avez atteint le statut le plus élevé. Félicitations ! 🎉',
     'rewards.r1': 'Cocktail du mois offert',
     'rewards.r2': 'Accès aux dégustations exclusives',
-    'rewards.r3': 'Pack merchandising Nightlight',
+    'rewards.r3': 'Pack merchandising Quarter',
     // History
     'history.title': 'Mon historique',
     'history.sub': 'Vos dernières sorties',

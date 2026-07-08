@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { saveMember, generateMemberId } from '../lib/member'
+import { Link } from 'react-router-dom'
+import { signUp, signInWithGoogle } from '../lib/auth'
 import { WELCOME_BONUS } from '../data/rewards'
 import { CITIES } from '../data/venues'
 
@@ -23,12 +23,17 @@ const UNIVERSITIES = {
 const STEPS = ['Personal', 'Location', 'Preferences', 'Verify ID']
 
 export default function SignUp() {
-  const navigate = useNavigate()
   const [step, setStep] = useState(0)
+  const [done, setDone] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const [submitError, setSubmitError] = useState(null)
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     dob: '',
     gender: '',
     city: '',
@@ -56,6 +61,8 @@ export default function SignUp() {
     if (!form.firstName.trim()) e.firstName = 'Required'
     if (!form.lastName.trim()) e.lastName = 'Required'
     if (!form.email.includes('@')) e.email = 'Valid email required'
+    if (form.password.length < 8) e.password = 'Minimum 8 characters'
+    if (form.password !== form.confirmPassword) e.confirmPassword = 'Passwords do not match'
     if (!form.dob) e.dob = 'Required'
     else {
       const age = (Date.now() - new Date(form.dob)) / (1000 * 60 * 60 * 24 * 365.25)
@@ -95,16 +102,23 @@ export default function SignUp() {
     }, 2000)
   }
 
-  function handleSubmit() {
-    const member = {
-      ...form,
-      verified: docScanned,
-      memberId: generateMemberId(),
-      signupDate: new Date().toISOString(),
-      points: WELCOME_BONUS,
+  async function handleSubmit() {
+    setLoading(true)
+    setSubmitError(null)
+    try {
+      await signUp({
+        email: form.email,
+        password: form.password,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        city: form.city,
+      })
+      setDone(true)
+    } catch (err) {
+      setSubmitError(err.message)
+    } finally {
+      setLoading(false)
     }
-    saveMember(member)
-    navigate('/dashboard')
   }
 
   const inputClass = "w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
@@ -114,15 +128,76 @@ export default function SignUp() {
     color: 'var(--text)',
   }
 
+  if (done) {
+    return (
+      <div style={{ backgroundColor: 'var(--bg)' }} className="min-h-screen flex flex-col items-center justify-center px-6 text-center gap-6">
+        <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl" style={{ backgroundColor: 'rgba(200,146,42,0.15)', border: '1px solid rgba(200,146,42,0.3)' }}>
+          ✅
+        </div>
+        <div>
+          <h2 style={{ color: 'var(--text)' }} className="text-xl font-bold mb-2">Account created!</h2>
+          <p style={{ color: 'var(--muted)' }} className="text-sm leading-relaxed">
+            Welcome to Quarter, {form.firstName}.<br />
+            Your {WELCOME_BONUS} welcome points are waiting.
+          </p>
+        </div>
+        <Link
+          to="/login"
+          className="w-full max-w-xs py-3.5 rounded-xl font-semibold text-sm text-center block"
+          style={{ backgroundColor: 'var(--accent)', color: 'white' }}
+        >
+          Sign in to your account →
+        </Link>
+        <p style={{ color: 'var(--muted)', fontSize: '11px' }}>
+          Quarter · Drink responsibly
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div style={{ backgroundColor: 'var(--bg)' }} className="min-h-screen flex flex-col px-4 pt-12 pb-8">
       {/* Logo */}
-      <Link to="/" className="flex items-center gap-2 mb-8">
+      <Link to="/" className="flex items-center gap-2 mb-6">
         <div style={{ backgroundColor: 'var(--accent)' }} className="w-7 h-7 rounded-md flex items-center justify-center">
           <span className="text-white text-xs font-bold">NL</span>
         </div>
-        <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Nightlight</span>
+        <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Quarter</span>
       </Link>
+
+      {/* Google sign-up */}
+      <button
+        onClick={async () => {
+          setGoogleLoading(true)
+          try { await signInWithGoogle() } catch { setGoogleLoading(false) }
+        }}
+        disabled={googleLoading}
+        className="w-full py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-3 mb-4 transition-all active:scale-95"
+        style={{
+          backgroundColor: 'var(--surface)',
+          border: '1px solid var(--border)',
+          color: 'var(--text)',
+          opacity: googleLoading ? 0.7 : 1,
+        }}
+      >
+        {googleLoading ? <span style={{ color: 'var(--muted)' }}>Redirecting…</span> : (
+          <>
+            <svg width="18" height="18" viewBox="0 0 18 18">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/>
+            </svg>
+            Continue with Google
+          </>
+        )}
+      </button>
+
+      <div className="flex items-center gap-3 mb-4">
+        <div className="flex-1 h-px" style={{ backgroundColor: 'var(--border)' }} />
+        <span style={{ color: 'var(--muted)', fontSize: '11px' }}>or sign up with email</span>
+        <div className="flex-1 h-px" style={{ backgroundColor: 'var(--border)' }} />
+      </div>
 
       {/* Card */}
       <div
@@ -188,12 +263,39 @@ export default function SignUp() {
               <input
                 type="email"
                 className={inputClass}
-                style={{ ...inputStyle, borderColor: errors.email ? '#f87171' : 'var(--border)' }}
+                style={{ ...inputStyle, borderColor: errors.email ? '#f87171' : 'var(--border)', fontSize: '16px' }}
                 value={form.email}
                 onChange={e => set('email', e.target.value)}
                 placeholder="you@university.edu"
               />
               {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label style={{ color: 'var(--muted)' }} className="text-xs mb-1 block">Password</label>
+                <input
+                  type="password"
+                  className={inputClass}
+                  style={{ ...inputStyle, borderColor: errors.password ? '#f87171' : 'var(--border)', fontSize: '16px' }}
+                  value={form.password}
+                  onChange={e => set('password', e.target.value)}
+                  placeholder="Min. 8 chars"
+                />
+                {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password}</p>}
+              </div>
+              <div>
+                <label style={{ color: 'var(--muted)' }} className="text-xs mb-1 block">Confirm</label>
+                <input
+                  type="password"
+                  className={inputClass}
+                  style={{ ...inputStyle, borderColor: errors.confirmPassword ? '#f87171' : 'var(--border)', fontSize: '16px' }}
+                  value={form.confirmPassword}
+                  onChange={e => set('confirmPassword', e.target.value)}
+                  placeholder="Repeat"
+                />
+                {errors.confirmPassword && <p className="text-red-400 text-xs mt-1">{errors.confirmPassword}</p>}
+              </div>
             </div>
 
             <div>
@@ -243,9 +345,9 @@ export default function SignUp() {
                     onClick={() => { set('city', city); set('university', '') }}
                     className="py-2.5 px-3 rounded-lg text-sm font-medium transition-all text-left"
                     style={{
-                      backgroundColor: form.city === city ? 'rgba(83,74,183,0.2)' : 'var(--surface2)',
+                      backgroundColor: form.city === city ? 'rgba(200,146,42,0.2)' : 'var(--surface2)',
                       border: `1px solid ${form.city === city ? 'var(--accent)' : 'var(--border)'}`,
-                      color: form.city === city ? '#9B93E8' : 'var(--muted)',
+                      color: form.city === city ? '#DBA84E' : 'var(--muted)',
                     }}
                   >
                     {city}
@@ -309,7 +411,7 @@ export default function SignUp() {
                   type="checkbox"
                   checked={form.emailOptIn}
                   onChange={e => set('emailOptIn', e.target.checked)}
-                  className="w-4 h-4 accent-violet-500"
+                  className="w-4 h-4 [#C8922A]"
                 />
               </label>
 
@@ -325,7 +427,7 @@ export default function SignUp() {
                   type="checkbox"
                   checked={form.smsOptIn}
                   onChange={e => set('smsOptIn', e.target.checked)}
-                  className="w-4 h-4 accent-violet-500"
+                  className="w-4 h-4 [#C8922A]"
                 />
               </label>
 
@@ -364,11 +466,11 @@ export default function SignUp() {
             {/* Welcome bonus info */}
             <div
               className="rounded-xl px-4 py-3 flex items-center gap-3"
-              style={{ backgroundColor: 'rgba(83,74,183,0.1)', border: '1px solid rgba(83,74,183,0.25)' }}
+              style={{ backgroundColor: 'rgba(200,146,42,0.1)', border: '1px solid rgba(200,146,42,0.25)' }}
             >
               <span className="text-2xl">🎁</span>
               <div>
-                <div style={{ color: '#9B93E8' }} className="text-sm font-semibold">{WELCOME_BONUS} welcome points</div>
+                <div style={{ color: '#DBA84E' }} className="text-sm font-semibold">{WELCOME_BONUS} welcome points</div>
                 <div style={{ color: 'var(--muted)' }} className="text-xs">Credited instantly on sign-up</div>
               </div>
             </div>
@@ -396,9 +498,9 @@ export default function SignUp() {
                     onClick={() => { set('docType', doc); setDocScanned(false) }}
                     className="py-2 px-2 rounded-lg text-xs font-medium transition-all"
                     style={{
-                      backgroundColor: form.docType === doc ? 'rgba(83,74,183,0.2)' : 'var(--surface2)',
+                      backgroundColor: form.docType === doc ? 'rgba(200,146,42,0.2)' : 'var(--surface2)',
                       border: `1px solid ${form.docType === doc ? 'var(--accent)' : 'var(--border)'}`,
-                      color: form.docType === doc ? '#9B93E8' : 'var(--muted)',
+                      color: form.docType === doc ? '#DBA84E' : 'var(--muted)',
                     }}
                   >
                     {doc === 'Passport' ? '🛂' : doc === 'National ID' ? '🪪' : '🚗'} {doc}
@@ -465,7 +567,7 @@ export default function SignUp() {
                           type="checkbox"
                           checked={form.faceIdConsent}
                           onChange={e => set('faceIdConsent', e.target.checked)}
-                          className="mt-0.5 w-3.5 h-3.5 accent-violet-500 flex-shrink-0"
+                          className="mt-0.5 w-3.5 h-3.5 [#C8922A] flex-shrink-0"
                         />
                         <span style={{ color: 'var(--muted)' }} className="text-xs">
                           I explicitly consent to biometric face verification (GDPR Art. 9 — separate from general consent)
@@ -493,17 +595,23 @@ export default function SignUp() {
               <button
                 type="button"
                 onClick={handleSubmit}
+                disabled={loading}
                 className="text-xs text-center py-2"
-                style={{ color: 'var(--muted)' }}
+                style={{ color: 'var(--muted)', opacity: loading ? 0.5 : 1 }}
               >
-                Skip for now — verify later in your profile
+                {loading ? 'Creating account…' : 'Skip for now — verify later in your profile'}
               </button>
             )}
           </div>
         )}
 
         {/* Navigation buttons */}
-        <div className="flex gap-2 mt-6">
+        {submitError && (
+          <div className="mt-4 rounded-xl px-4 py-3 text-xs" style={{ backgroundColor: 'rgba(217,83,79,0.1)', border: '1px solid rgba(217,83,79,0.3)', color: '#f87171' }}>
+            {submitError}
+          </div>
+        )}
+        <div className="flex gap-2 mt-4">
           {step > 0 && (
             <button
               onClick={() => setStep(s => s - 1)}
@@ -524,10 +632,11 @@ export default function SignUp() {
           ) : docScanned ? (
             <button
               onClick={handleSubmit}
+              disabled={loading}
               className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
-              style={{ backgroundColor: '#16a34a', color: 'white' }}
+              style={{ backgroundColor: '#16a34a', color: 'white', opacity: loading ? 0.7 : 1 }}
             >
-              Generate my verified card ✅
+              {loading ? 'Creating account…' : 'Create my account ✅'}
             </button>
           ) : null}
         </div>
