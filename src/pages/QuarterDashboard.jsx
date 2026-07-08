@@ -387,14 +387,14 @@ function CampaignsView() {
         </div>
         <table className="qd-table" style={{ fontSize: 12 }}><tbody>
           <tr><td style={{ color: 'var(--qd-text-dim)' }}>Personal data shared with {campaign.brand}</td><td style={{ color: '#1D9E75', fontWeight: 500 }}>None</td></tr>
-          <tr><td style={{ color: 'var(--qd-text-dim)' }}>Targeting performed by</td><td>Nightlight (internal only)</td></tr>
+          <tr><td style={{ color: 'var(--qd-text-dim)' }}>Targeting performed by</td><td>Quarter (internal only)</td></tr>
           <tr><td style={{ color: 'var(--qd-text-dim)' }}>Brand visibility of segment</td><td>Aggregate reach count only (214)</td></tr>
           <tr><td style={{ color: 'var(--qd-text-dim)' }}>Name opt-ins (user-initiated)</td><td>{f.optedIn} guests — consent captured at RSVP</td></tr>
           <tr><td style={{ color: 'var(--qd-text-dim)' }}>Lawful basis</td><td>Art. 6(1)(a) GDPR — explicit consent</td></tr>
           <tr><td style={{ color: 'var(--qd-text-dim)' }}>Data retention</td><td>RSVP records anonymised 24 months post-event</td></tr>
         </tbody></table>
         <Insight>
-          {campaign.gdprNote} The {f.optedIn} opt-in names are held by Nightlight and used only for door check-in. They are not transferred to {campaign.brand}'s CRM without a separate, user-initiated action.
+          {campaign.gdprNote} The {f.optedIn} opt-in names are held by Quarter and used only for door check-in. They are not transferred to {campaign.brand}'s CRM without a separate, user-initiated action.
         </Insight>
       </div>
 
@@ -438,7 +438,7 @@ export default function QuarterDashboard() {
 
   return (
     <div className="qd-root">
-      <button className="qd-back" onClick={() => navigate('/profile')}>← Back to Nightlight</button>
+      <button className="qd-back" onClick={() => navigate('/profile')}>← Back to Quarter</button>
       <header className="qd-header">
         <div className="qd-label-tiny" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ background: '#534AB7', color: 'white', fontWeight: 700, padding: '2px 8px', borderRadius: 4, letterSpacing: '0.05em' }}>Q</span>

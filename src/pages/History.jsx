@@ -160,7 +160,7 @@ function TagSheet({ visitId, currentIds, onClose, onSave }) {
             )}
             {query.length === 0 && selected.length === 0 && (
               <p style={{ color: 'var(--muted)' }} className="text-xs text-center py-3">
-                Search for a Nightlight member to tag
+                Search for a Quarter member to tag
               </p>
             )}
             {results.map(m => {
@@ -172,8 +172,8 @@ function TagSheet({ visitId, currentIds, onClose, onSave }) {
                   onClick={() => toggle(m.id)}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl mb-1 text-left transition-colors"
                   style={{
-                    backgroundColor: isSelected ? 'rgba(83,74,183,0.15)' : 'transparent',
-                    border: `1px solid ${isSelected ? 'rgba(83,74,183,0.3)' : 'transparent'}`,
+                    backgroundColor: isSelected ? 'rgba(200,146,42,0.15)' : 'transparent',
+                    border: `1px solid ${isSelected ? 'rgba(200,146,42,0.3)' : 'transparent'}`,
                   }}
                 >
                   {/* Avatar */}
@@ -306,16 +306,16 @@ export default function History() {
           onClick={() => navigate('/profile?section=crew')}
           className="w-full flex items-center justify-between rounded-2xl px-4 py-3.5 text-left transition-all active:scale-95"
           style={{
-            backgroundColor: 'rgba(83,74,183,0.08)',
-            border: '1px solid rgba(83,74,183,0.25)',
+            backgroundColor: 'rgba(200,146,42,0.08)',
+            border: '1px solid rgba(200,146,42,0.25)',
           }}
         >
           <div className="flex items-center gap-3">
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: 'rgba(83,74,183,0.2)' }}
+              style={{ backgroundColor: 'rgba(200,146,42,0.2)' }}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="#9B93E8" strokeWidth={1.8} className="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#DBA84E" strokeWidth={1.8} className="w-5 h-5">
                 <circle cx="9" cy="7" r="3" />
                 <path d="M3 20c0-3.3 2.7-6 6-6" strokeLinecap="round" />
                 <circle cx="16" cy="7" r="3" />
@@ -325,7 +325,7 @@ export default function History() {
               </svg>
             </div>
             <div>
-              <div style={{ color: '#9B93E8' }} className="text-sm font-semibold">{t('history.groupActivity')}</div>
+              <div style={{ color: '#DBA84E' }} className="text-sm font-semibold">{t('history.groupActivity')}</div>
               <div style={{ color: 'var(--muted)', fontSize: '11px' }} className="mt-0.5">
                 {crewCount > 0
                   ? `${crewCount} network member${crewCount !== 1 ? 's' : ''} · ${crewTopTwo.join(', ')}${crewCount > 2 ? ` +${crewCount - 2}` : ''}`
@@ -333,7 +333,7 @@ export default function History() {
               </div>
             </div>
           </div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="#9B93E8" strokeWidth={2} className="w-4 h-4 flex-shrink-0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DBA84E" strokeWidth={2} className="w-4 h-4 flex-shrink-0">
             <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
@@ -403,7 +403,7 @@ export default function History() {
                           </div>
                           <div
                             className="flex-shrink-0 px-2 py-1 rounded-lg text-xs font-semibold"
-                            style={{ backgroundColor: 'rgba(83,74,183,0.15)', color: '#9B93E8' }}
+                            style={{ backgroundColor: 'rgba(200,146,42,0.15)', color: '#DBA84E' }}
                           >
                             +{visit.pointsEarned} pts
                           </div>

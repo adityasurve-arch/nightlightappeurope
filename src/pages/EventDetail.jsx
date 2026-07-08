@@ -63,10 +63,10 @@ function ConfirmationScreen({ event, shareConsent, onClose }) {
 
       <div
         className="w-full rounded-xl px-4 py-3 flex items-center gap-3"
-        style={{ backgroundColor: 'rgba(83,74,183,0.1)', border: '1px solid rgba(83,74,183,0.2)' }}
+        style={{ backgroundColor: 'rgba(200,146,42,0.1)', border: '1px solid rgba(200,146,42,0.2)' }}
       >
         <span className="text-lg">⭐</span>
-        <div style={{ color: '#9B93E8' }} className="text-sm font-medium">
+        <div style={{ color: '#DBA84E' }} className="text-sm font-medium">
           +{event.pointsForRsvp} pts added to your card
         </div>
       </div>
@@ -241,17 +241,17 @@ export default function EventDetail() {
           </div>
           <p style={{ color: 'var(--text)' }} className="text-sm leading-relaxed">{event.whyInvited}</p>
           <p style={{ color: 'var(--muted)', fontSize: '11px' }} className="mt-2">
-            Nightlight matched your drink preferences to this event. No personal data was shared with {event.brandName} to send this invite.
+            Quarter matched your drink preferences to this event. No personal data was shared with {event.brandName} to send this invite.
           </p>
         </div>
 
         {/* Points reward */}
         <div
           className="rounded-xl px-4 py-3 flex items-center gap-3"
-          style={{ backgroundColor: 'rgba(83,74,183,0.1)', border: '1px solid rgba(83,74,183,0.2)' }}
+          style={{ backgroundColor: 'rgba(200,146,42,0.1)', border: '1px solid rgba(200,146,42,0.2)' }}
         >
           <span className="text-lg">⭐</span>
-          <p style={{ color: '#9B93E8' }} className="text-sm font-medium">
+          <p style={{ color: '#DBA84E' }} className="text-sm font-medium">
             Earn +{event.pointsForRsvp} pts just for RSVPing
           </p>
         </div>
@@ -302,7 +302,7 @@ export default function EventDetail() {
                 Invite me to future events like this
               </div>
               <div style={{ color: 'var(--muted)' }} className="text-xs mt-0.5 leading-relaxed">
-                Optional. Nightlight will match your preferences to curated events. You can turn this off anytime in Profile → Preferences.
+                Optional. Quarter will match your preferences to curated events. You can turn this off anytime in Profile → Preferences.
               </div>
             </div>
           </label>
@@ -312,7 +312,7 @@ export default function EventDetail() {
             className="rounded-xl px-3 py-2.5 text-xs leading-relaxed"
             style={{ backgroundColor: 'rgba(136,136,160,0.08)', color: 'var(--muted)', border: '1px solid var(--border)' }}
           >
-            By tapping RSVP, you agree to receive event reminders from Nightlight about this event only. Your personal data is processed under Nightlight's{' '}
+            By tapping RSVP, you agree to receive event reminders from Quarter about this event only. Your personal data is processed under Quarter's{' '}
             <span style={{ color: 'var(--accent)' }} className="underline cursor-pointer">Privacy Policy</span>
             {' '}(Art. 6(1)(b) GDPR — performance of a contract). Withdrawal of consent doesn't affect your RSVP status.
           </div>

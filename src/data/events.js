@@ -20,7 +20,7 @@ export const EVENTS = [
     description:
       'The Malt Society invites you to an exclusive first-look at Cask No. 7 — a limited single malt aged 12 years in French oak barrels. Three expressions poured blind, one evening, paired with light bites from the Le Cercle kitchen. Forty guests. No press.',
     whyInvited:
-      'You were selected because your Nightlight activity shows a preference for premium whisky. This event was built for members who match that profile.',
+      'You were selected because your Quarter activity shows a preference for premium whisky. This event was built for members who match that profile.',
   },
 ]
 

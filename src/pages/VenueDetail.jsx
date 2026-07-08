@@ -6,7 +6,7 @@ import { MENU } from '../data/menu'
 const REVIEWS = [
   { name: 'Sofia R.', tier: 'Silver', stars: 5, text: 'Great vibe on Thursdays. The member deal on vodka is actually real — same price as house.', date: 'May 2026' },
   { name: 'Luca F.', tier: 'Bronze', stars: 4, text: 'Came with my crew, ordered from the table with the app. No waiting at the bar, drinks were ready fast.', date: 'May 2026' },
-  { name: 'Camille M.', tier: 'Gold', stars: 5, text: 'My go-to spot. Staff knows the Nightlight perks and the pickup QR works smoothly.', date: 'April 2026' },
+  { name: 'Camille M.', tier: 'Gold', stars: 5, text: 'My go-to spot. Staff knows the Quarter perks and the pickup QR works smoothly.', date: 'April 2026' },
 ]
 
 function Stars({ n }) {
@@ -117,7 +117,7 @@ export default function VenueDetail() {
           <button
             onClick={() => setTab('offers')}
             className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex-shrink-0 nl-press"
-            style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent-light)', border: '1px solid rgba(83,74,183,0.3)', cursor: 'pointer' }}
+            style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent-light)', border: '1px solid rgba(200,146,42,0.3)', cursor: 'pointer' }}
           >
             ✨ Tonight's deal
           </button>
@@ -266,7 +266,7 @@ export default function VenueDetail() {
               </div>
             ))}
             <p style={{ color: 'var(--muted)', fontSize: 11 }} className="text-center pb-2">
-              Reviews from verified Nightlight members only
+              Reviews from verified Quarter members only
             </p>
           </div>
         )}
