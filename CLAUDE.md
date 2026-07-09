@@ -33,15 +33,14 @@ The app is designed as a mobile-first phone shell:
 
 - **Public routes:** `/` (Landing), `/signup`
 - **Protected routes:** `/dashboard`, `/rewards`, `/venues`, `/history`, `/profile`
-- `RequireAuth` — redirects unauthenticated users to `/`
+- `RequireAuth` — redirects unauthenticated users to `/login` (Supabase session check)
 - `ProtectedLayout` — wraps every protected route with `<BottomNav />` and a `pb-[64px]` content spacer
-- `Navbar.jsx` is **no longer used** — it still exists in the repo but is not imported anywhere
 
 ---
 
 ### Navigation (`src/components/BottomNav.jsx`)
 
-Replaced the old top `Navbar`. Fixed bottom bar, 64px tall, `safe-area-inset-bottom`-aware for iPhone notch.
+Fixed bottom bar, 64px tall, `safe-area-inset-bottom`-aware for iPhone notch.
 
 | Tab | Route |
 |-----|-------|
@@ -120,7 +119,9 @@ Exports:
 - **`TagSheet`** — bottom drawer that opens when tapping `+ Tag friends` / `Edit` on a card. Searches `networkMembers` in real time, tap to select/deselect, saves to `localStorage` via `setVisitCompanions`
 - **"Group activity" button** — purple accent card above the city filter tabs; shows crew count preview (`13 network members · Sofia, Luca +11`); navigates to `/profile?section=crew`
 
-**`Profile.jsx`** — Initials avatar (from member name), member details table, **"Your crew" section** (built by `buildCrew()` — counts outings per network member across all visits using `getCompanions()` merged with `defaultCompanions`, sorted by frequency, shows name / city / tier / outing count). When arriving via `?section=crew` in the URL, the page auto-scrolls to the crew section using a `ref` + `scrollIntoView`. Sign-out clears localStorage and redirects to `/`.
+**`Profile.jsx`** — Initials avatar (from member name), member details table, links to visit history / rewards, language toggle, link to the Quarter brand dashboard (`/quarter`). Sign-out clears localStorage and redirects to `/`.
+
+**`GroupOrder.jsx`** (route `/order`) — QR-menu-style order flow, all steps in one component driven by a `step` state machine: `scan` (simulated venue-QR scan, resolves to `nl_venue` in localStorage or `VENUES[0]`, ~3 s) → `table` (venue hero + Start a Table / Join a Table) → `qr` (host table QR, demo friends auto-join) or `join` (scan host QR, auto-connects) → `menu` (per-member shared cart) → `cart` (order summary + payment method: card / Apple Pay / wallet / pay at counter) → `placed` (status bar auto-advances to ready, then shows pickup QR). Arriving with `?venue=<id>` skips the scan step.
 
 ---
 
