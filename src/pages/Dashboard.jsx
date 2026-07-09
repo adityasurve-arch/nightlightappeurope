@@ -184,36 +184,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Crew activity — social FOMO loop */}
-        <Link
-          to="/profile?section=crew"
-          className="rounded-xl p-4 flex items-center gap-3 nl-press"
-          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', textDecoration: 'none' }}
-        >
-          <div className="flex -space-x-2 flex-shrink-0">
-            {[
-              { initials: 'SR', color: 'var(--tier-gold)' },
-              { initials: 'LB', color: 'var(--tier-silver)' },
-              { initials: 'EM', color: 'var(--tier-bronze)' },
-            ].map(({ initials, color }) => (
-              <div
-                key={initials}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold"
-                style={{ backgroundColor: 'var(--surface2)', border: `1.5px solid ${color}`, color: 'var(--text)' }}
-              >
-                {initials}
-              </div>
-            ))}
-          </div>
-          <div className="flex-1">
-            <div style={{ color: 'var(--text)' }} className="text-sm font-semibold">{t('dash.crewOut')}</div>
-            <div style={{ color: 'var(--muted)' }} className="text-xs mt-0.5">
-              {t('dash.crewEarned')} <span style={{ color: 'var(--accent-light)' }} className="font-semibold">150 pts</span> {t('dash.together')}
-            </div>
-          </div>
-          <span style={{ color: 'var(--muted)' }}>→</span>
-        </Link>
-
         {/* Event invite card */}
         {EVENTS.length > 0 && (() => {
           const ev = EVENTS[0]

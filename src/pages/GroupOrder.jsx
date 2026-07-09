@@ -179,7 +179,7 @@ function VenueScanScreen({ detected }) {
 }
 
 // ─── SCREEN 2: Venue detected → Start a Table ────────────────────────────────
-function TableStartScreen({ venue, onStart, onJoin, onRescan }) {
+function TableStartScreen({ venue, onStart, onJoin, onSolo, onRescan }) {
   const { t } = useLang()
   return (
     <div style={{ backgroundColor: 'var(--bg)', minHeight: '100%', padding: '32px 20px' }}>
@@ -251,6 +251,18 @@ function TableStartScreen({ venue, onStart, onJoin, onRescan }) {
           }}
         >
           {t('order.join')}
+        </button>
+        <button
+          onClick={onSolo}
+          className="nl-press"
+          style={{
+            backgroundColor: 'transparent', color: 'var(--muted)',
+            border: '1px dashed var(--border)', borderRadius: 14,
+            padding: '14px 0', fontSize: 14, fontWeight: 600,
+            cursor: 'pointer', width: '100%',
+          }}
+        >
+          {t('order.solo')} →
         </button>
         <button
           onClick={onRescan}
@@ -1022,7 +1034,7 @@ export default function GroupOrder() {
     Object.values(cart).reduce((t, mc) => t + Object.values(mc).reduce((a, b) => a + b, 0), 0)
 
   if (step === 'scan') return <VenueScanScreen detected={scanDetected} />
-  if (step === 'table') return <TableStartScreen venue={venue} onStart={() => { setTableMembers([me]); setStep('qr') }} onJoin={() => setStep('join')} onRescan={rescan} />
+  if (step === 'table') return <TableStartScreen venue={venue} onStart={() => { setTableMembers([me]); setStep('qr') }} onJoin={() => setStep('join')} onSolo={() => { setTableMembers([me]); setActiveMember(me.id); setStep('menu') }} onRescan={rescan} />
   if (step === 'join') return <JoinScreen />
   if (step === 'qr') return <HostQRScreen member={member} tableMembers={tableMembers} venue={venue} onStart={() => { setActiveMember(me.id); setStep('menu') }} />
   if (step === 'menu') return (
