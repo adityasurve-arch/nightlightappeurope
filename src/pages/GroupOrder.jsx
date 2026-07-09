@@ -1,108 +1,11 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { getMember } from '../lib/member'
 import { MENU, getItemById } from '../data/menu'
 import { VENUES, getVenueById } from '../data/venues'
 import { useLang } from '../lib/i18n'
 
 const VENUE_KEY = 'nl_venue'
-
-// ─── Venue context banner — shown across the order flow ─────────────────────
-function VenueBanner({ venue, onChange }) {
-  const { t } = useLang()
-  if (!venue) return null
-  return (
-    <div
-      style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
-        borderRadius: 14, padding: '10px 12px', marginBottom: 20,
-      }}
-    >
-      <img
-        src={venue.photos[0]}
-        alt={venue.name}
-        style={{ width: 40, height: 40, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
-      />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ color: 'var(--muted)', fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-          {t('order.orderingAt')}
-        </div>
-        <div style={{ color: 'var(--text)', fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          📍 {venue.name}
-        </div>
-      </div>
-      {onChange && (
-        <button
-          onClick={onChange}
-          className="nl-press"
-          style={{
-            backgroundColor: 'var(--surface2)', color: 'var(--muted)',
-            border: '1px solid var(--border)', borderRadius: 8,
-            padding: '6px 10px', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0,
-          }}
-        >
-          {t('order.change')}
-        </button>
-      )}
-    </div>
-  )
-}
-
-// ─── Venue picker — shown when the order flow has no venue context ──────────
-function VenuePickerScreen({ onPick, onBack }) {
-  const { t } = useLang()
-  return (
-    <div style={{ backgroundColor: 'var(--bg)', minHeight: '100%', padding: '32px 20px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-        <button
-          onClick={onBack}
-          className="nl-press"
-          style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: 22, padding: 0, lineHeight: 1, flexShrink: 0 }}
-        >
-          ←
-        </button>
-        <h1 style={{ color: 'var(--text)', fontSize: 24, fontWeight: 700 }}>
-          {t('order.where')}
-        </h1>
-      </div>
-      <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.5, marginBottom: 24 }}>
-        {t('order.whereSub')}
-      </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {VENUES.map(v => (
-          <button
-            key={v.id}
-            onClick={() => onPick(v)}
-            className="nl-press"
-            style={{
-              display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
-              backgroundColor: 'var(--surface)', border: '1px solid var(--border)',
-              borderRadius: 14, padding: 12, cursor: 'pointer', width: '100%',
-            }}
-          >
-            <img
-              src={v.photos[0]}
-              alt={v.name}
-              style={{ width: 52, height: 52, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
-            />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ color: 'var(--text)', fontSize: 14, fontWeight: 700 }}>{v.name}</div>
-              <div style={{ color: 'var(--muted)', fontSize: 11, marginTop: 2 }}>{v.type}</div>
-              <div style={{ color: 'var(--muted)', fontSize: 11, marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {v.address}
-              </div>
-            </div>
-            <span style={{ color: 'var(--muted)', flexShrink: 0 }}>→</span>
-          </button>
-        ))}
-      </div>
-      <p style={{ color: 'var(--muted)', fontSize: 11, textAlign: 'center', marginTop: 20, lineHeight: 1.5 }}>
-        {t('order.whereNote')}
-      </p>
-    </div>
-  )
-}
 
 // ─── Demo friends who "join" the table ───────────────────────────────────────
 const DEMO_FRIENDS = [
@@ -166,48 +69,135 @@ function QRCode({ value = 'NL-TABLE', size = 176 }) {
   )
 }
 
-// ─── Member avatar chip ───────────────────────────────────────────────────────
-function MemberAvatar({ member, size = 36, active = false, onClick }) {
+// ─── Camera scanner frame (shared by venue scan + join scan) ─────────────────
+function ScannerView({ title, subtitle, hint, detected }) {
   return (
-    <button
-      onClick={onClick}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        backgroundColor: active ? 'var(--accent)' : 'var(--surface2)',
-        border: `2px solid ${active ? 'var(--accent)' : TIER_COLORS[member.tier] || 'var(--border)'}`,
-        color: active ? 'white' : 'var(--text)',
-        fontSize: 11,
-        fontWeight: 700,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: onClick ? 'pointer' : 'default',
-        flexShrink: 0,
-        transition: 'all 0.2s',
-      }}
-    >
-      {member.initials}
-    </button>
+    <div style={{ backgroundColor: '#000', height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0a0a0a' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)' }} />
+
+        {/* Scanner frame */}
+        <div style={{ position: 'relative', width: 240, height: 240, zIndex: 2 }}>
+          {[
+            { top: 0, left: 0, borderTop: '3px solid white', borderLeft: '3px solid white', borderRadius: '6px 0 0 0' },
+            { top: 0, right: 0, borderTop: '3px solid white', borderRight: '3px solid white', borderRadius: '0 6px 0 0' },
+            { bottom: 0, left: 0, borderBottom: '3px solid white', borderLeft: '3px solid white', borderRadius: '0 0 0 6px' },
+            { bottom: 0, right: 0, borderBottom: '3px solid white', borderRight: '3px solid white', borderRadius: '0 0 6px 0' },
+          ].map((style, i) => (
+            <div key={i} style={{ position: 'absolute', width: 28, height: 28, ...style, ...(detected ? { borderColor: '#4ade80' } : {}) }} />
+          ))}
+
+          {!detected && (
+            <div
+              style={{
+                position: 'absolute',
+                left: 8, right: 8, height: 2,
+                background: 'linear-gradient(90deg, transparent, #C8922A, #DBA84E, #C8922A, transparent)',
+                boxShadow: '0 0 12px rgba(200,146,42,0.8)',
+                animation: 'scanLine 2s ease-in-out infinite',
+              }}
+            />
+          )}
+
+          {detected && (
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div
+                style={{
+                  width: 56, height: 56, borderRadius: '50%',
+                  backgroundColor: 'rgba(74,222,128,0.15)', border: '2px solid #4ade80',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#4ade80', fontSize: 26, animation: 'popIn 0.3s ease',
+                }}
+              >
+                ✓
+              </div>
+            </div>
+          )}
+
+          <div style={{ position: 'absolute', inset: 0, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 4 }} />
+        </div>
+
+        {/* Top label */}
+        <div style={{ position: 'absolute', top: 48, left: 0, right: 0, textAlign: 'center', zIndex: 2, padding: '0 24px' }}>
+          <div style={{ color: 'white', fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{title}</div>
+          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>{subtitle}</div>
+        </div>
+
+        {/* Scanning indicator */}
+        <div
+          style={{
+            position: 'absolute', bottom: 80, left: 0, right: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, zIndex: 2,
+          }}
+        >
+          {detected ? (
+            <span style={{ color: '#4ade80', fontSize: 13, fontWeight: 600 }}>QR detected</span>
+          ) : (
+            <>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {[0, 1, 2].map(i => (
+                  <div
+                    key={i}
+                    style={{
+                      width: 6, height: 6, borderRadius: '50%',
+                      backgroundColor: 'rgba(255,255,255,0.4)',
+                      animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
+                    }}
+                  />
+                ))}
+              </div>
+              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>Scanning…</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Bottom sheet */}
+      <div style={{ backgroundColor: '#0E0E10', padding: '20px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <p style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5, margin: 0, textAlign: 'center' }}>{hint}</p>
+      </div>
+
+      <style>{`
+        @keyframes scanLine { 0%, 100% { top: 8px; } 50% { top: calc(100% - 10px); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
+      `}</style>
+    </div>
   )
 }
 
-// ─── SCREEN 1: Home ───────────────────────────────────────────────────────────
-function HomeScreen({ onStart, onJoin, venue, onChangeVenue }) {
+// ─── SCREEN 1: Scan the venue QR (entry point, like a QR menu) ───────────────
+function VenueScanScreen({ detected }) {
+  return (
+    <ScannerView
+      title="Scan the venue QR"
+      subtitle="Find it on your table or at the bar"
+      hint="Every Quarter partner venue has a QR code on the table — scan it to see the menu and start ordering"
+      detected={detected}
+    />
+  )
+}
+
+// ─── SCREEN 2: Venue detected → Start a Table ────────────────────────────────
+function TableStartScreen({ venue, onStart, onJoin, onRescan }) {
   const { t } = useLang()
   return (
     <div style={{ backgroundColor: 'var(--bg)', minHeight: '100%', padding: '32px 20px' }}>
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ color: 'var(--text)', fontSize: 24, fontWeight: 700, marginBottom: 6 }}>
-          {t('order.title')}
-        </h1>
-        <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.5 }}>
-          {t('order.sub')}
-        </p>
+      {/* Venue hero */}
+      <div
+        style={{
+          borderRadius: 20, overflow: 'hidden', marginBottom: 20,
+          border: '1px solid var(--border)', position: 'relative',
+        }}
+      >
+        <img src={venue.photos[0]} alt={venue.name} style={{ width: '100%', height: 150, objectFit: 'cover', display: 'block' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 30%, rgba(14,14,16,0.92) 100%)' }} />
+        <div style={{ position: 'absolute', bottom: 12, left: 16, right: 16 }}>
+          <div style={{ color: '#4ade80', fontSize: 11, fontWeight: 600, marginBottom: 2 }}>✓ QR scanned</div>
+          <div style={{ color: 'white', fontSize: 18, fontWeight: 800 }}>{venue.name}</div>
+          <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}>{venue.address}</div>
+        </div>
       </div>
-
-      <VenueBanner venue={venue} onChange={onChangeVenue} />
 
       {/* How it works */}
       <div
@@ -216,7 +206,7 @@ function HomeScreen({ onStart, onJoin, venue, onChangeVenue }) {
           border: '1px solid var(--border)',
           borderRadius: 16,
           padding: 20,
-          marginBottom: 32,
+          marginBottom: 24,
           display: 'flex',
           flexDirection: 'column',
           gap: 16,
@@ -241,144 +231,53 @@ function HomeScreen({ onStart, onJoin, venue, onChangeVenue }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <button
           onClick={onStart}
+          className="nl-press"
           style={{
-            backgroundColor: 'var(--accent)',
-            color: 'white',
-            border: 'none',
-            borderRadius: 14,
-            padding: '16px 0',
-            fontSize: 15,
-            fontWeight: 700,
-            cursor: 'pointer',
-            width: '100%',
+            backgroundColor: 'var(--accent)', color: 'white', border: 'none',
+            borderRadius: 14, padding: '16px 0', fontSize: 15, fontWeight: 700,
+            cursor: 'pointer', width: '100%',
           }}
         >
           {t('order.start')}
         </button>
         <button
           onClick={onJoin}
+          className="nl-press"
           style={{
-            backgroundColor: 'transparent',
-            color: 'var(--text)',
-            border: '1px solid var(--border)',
-            borderRadius: 14,
-            padding: '16px 0',
-            fontSize: 15,
-            fontWeight: 600,
-            cursor: 'pointer',
-            width: '100%',
+            backgroundColor: 'transparent', color: 'var(--text)',
+            border: '1px solid var(--border)', borderRadius: 14,
+            padding: '16px 0', fontSize: 15, fontWeight: 600,
+            cursor: 'pointer', width: '100%',
           }}
         >
           {t('order.join')}
+        </button>
+        <button
+          onClick={onRescan}
+          style={{
+            background: 'none', border: 'none', color: 'var(--muted)',
+            fontSize: 12, cursor: 'pointer', padding: '6px 0',
+          }}
+        >
+          Wrong venue? Scan again
         </button>
       </div>
     </div>
   )
 }
 
-// ─── SCREEN 1b: Join — Camera Scanner ────────────────────────────────────────
+// ─── SCREEN 2b: Join — scan the host's QR ────────────────────────────────────
 function JoinScreen() {
   return (
-    <div style={{ backgroundColor: '#000', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Fake camera feed */}
-      <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0a0a0a' }}>
-
-        {/* Dim overlay with cutout feel */}
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)' }} />
-
-        {/* Scanner frame */}
-        <div style={{ position: 'relative', width: 240, height: 240, zIndex: 2 }}>
-          {/* Corner brackets */}
-          {[
-            { top: 0, left: 0, borderTop: '3px solid white', borderLeft: '3px solid white', borderRadius: '6px 0 0 0' },
-            { top: 0, right: 0, borderTop: '3px solid white', borderRight: '3px solid white', borderRadius: '0 6px 0 0' },
-            { bottom: 0, left: 0, borderBottom: '3px solid white', borderLeft: '3px solid white', borderRadius: '0 0 0 6px' },
-            { bottom: 0, right: 0, borderBottom: '3px solid white', borderRight: '3px solid white', borderRadius: '0 0 6px 0' },
-          ].map((style, i) => (
-            <div key={i} style={{ position: 'absolute', width: 28, height: 28, ...style }} />
-          ))}
-
-          {/* Scan line */}
-          <div
-            style={{
-              position: 'absolute',
-              left: 8, right: 8, height: 2,
-              background: 'linear-gradient(90deg, transparent, #534AB7, #9B93E8, #534AB7, transparent)',
-              boxShadow: '0 0 12px rgba(83,74,183,0.8)',
-              animation: 'scanLine 2s ease-in-out infinite',
-            }}
-          />
-
-          {/* Inner dim area */}
-          <div
-            style={{
-              position: 'absolute', inset: 0,
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 4,
-            }}
-          />
-        </div>
-
-        {/* Top label */}
-        <div
-          style={{
-            position: 'absolute', top: 48, left: 0, right: 0,
-            textAlign: 'center', zIndex: 2,
-          }}
-        >
-          <div style={{ color: 'white', fontSize: 16, fontWeight: 700, marginBottom: 6 }}>
-            Scan the host's QR code
-          </div>
-          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>
-            Point your camera at their screen
-          </div>
-        </div>
-
-        {/* Scanning indicator */}
-        <div
-          style={{
-            position: 'absolute', bottom: 80, left: 0, right: 0,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, zIndex: 2,
-          }}
-        >
-          <div style={{ display: 'flex', gap: 4 }}>
-            {[0, 1, 2].map(i => (
-              <div
-                key={i}
-                style={{
-                  width: 6, height: 6, borderRadius: '50%',
-                  backgroundColor: 'rgba(255,255,255,0.4)',
-                  animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
-                }}
-              />
-            ))}
-          </div>
-          <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>Scanning…</span>
-        </div>
-      </div>
-
-      {/* Bottom sheet */}
-      <div
-        style={{
-          backgroundColor: '#0E0E10',
-          padding: '20px 24px 36px',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
-        }}
-      >
-        <p style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5, margin: 0, textAlign: 'center' }}>
-          Ask the host to show their table QR code
-        </p>
-      </div>
-
-      <style>{`
-        @keyframes scanLine { 0%, 100% { top: 8px; } 50% { top: calc(100% - 10px); } }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
-      `}</style>
-    </div>
+    <ScannerView
+      title="Scan the host's QR code"
+      subtitle="Point your camera at their screen"
+      hint="Ask the host to show their table QR code"
+    />
   )
 }
 
-// ─── SCREEN 2: Host QR ────────────────────────────────────────────────────────
+// ─── SCREEN 3: Host QR ────────────────────────────────────────────────────────
 function HostQRScreen({ member, tableMembers, venue, onStart }) {
   const { t } = useLang()
   const ready = tableMembers.length >= 2
@@ -436,7 +335,7 @@ function HostQRScreen({ member, tableMembers, venue, onStart }) {
                   width: 36,
                   height: 36,
                   borderRadius: '50%',
-                  backgroundColor: i === 0 ? 'rgba(83,74,183,0.2)' : 'var(--surface2)',
+                  backgroundColor: i === 0 ? 'rgba(200,146,42,0.2)' : 'var(--surface2)',
                   border: `2px solid ${i === 0 ? 'var(--accent)' : TIER_COLORS[m.tier] || 'var(--border)'}`,
                   display: 'flex',
                   alignItems: 'center',
@@ -479,21 +378,20 @@ function HostQRScreen({ member, tableMembers, venue, onStart }) {
 
       <button
         onClick={onStart}
-        disabled={!ready}
         style={{
-          backgroundColor: ready ? 'var(--accent)' : 'var(--surface)',
-          color: ready ? 'white' : 'var(--muted)',
-          border: `1px solid ${ready ? 'var(--accent)' : 'var(--border)'}`,
+          backgroundColor: 'var(--accent)',
+          color: 'white',
+          border: '1px solid var(--accent)',
           borderRadius: 14,
           padding: '16px 0',
           fontSize: 15,
           fontWeight: 700,
-          cursor: ready ? 'pointer' : 'not-allowed',
+          cursor: 'pointer',
           width: '100%',
           transition: 'all 0.3s',
         }}
       >
-        {ready ? 'Start Ordering →' : `Waiting for friends (${tableMembers.length}/3)`}
+        {ready ? 'Start Ordering →' : 'Order by myself →'}
       </button>
 
       <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`}</style>
@@ -501,7 +399,7 @@ function HostQRScreen({ member, tableMembers, venue, onStart }) {
   )
 }
 
-// ─── SCREEN 3: Menu ───────────────────────────────────────────────────────────
+// ─── SCREEN 4: Menu ───────────────────────────────────────────────────────────
 function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeCategory, setActiveCategory, addToCart, removeFromCart, getTotalItems, onViewCart, onBack, venue }) {
   const totalItems = getTotalItems()
   const currentCat = MENU.find(c => c.category === activeCategory)
@@ -522,7 +420,7 @@ function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeC
           </h1>
         </div>
         <p style={{ color: 'var(--muted)', fontSize: 13 }}>
-          {venue ? `📍 ${venue.address.split(',')[0]} · ` : ''}Ordering as — pick who you're adding for
+          {venue ? `📍 ${venue.address.split(',')[0]} · ` : ''}Pick who you're adding drinks for
         </p>
       </div>
 
@@ -542,8 +440,8 @@ function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeC
                 padding: '8px 14px',
                 borderRadius: 99,
                 border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
-                backgroundColor: isActive ? 'rgba(83,74,183,0.15)' : 'var(--surface)',
-                color: isActive ? '#9B93E8' : 'var(--muted)',
+                backgroundColor: isActive ? 'rgba(200,146,42,0.15)' : 'var(--surface)',
+                color: isActive ? '#DBA84E' : 'var(--muted)',
                 fontSize: 13,
                 fontWeight: isActive ? 600 : 400,
                 cursor: 'pointer',
@@ -615,7 +513,7 @@ function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeC
               key={item.id}
               style={{
                 backgroundColor: 'var(--surface)',
-                border: `1px solid ${qty > 0 ? 'rgba(83,74,183,0.4)' : 'var(--border)'}`,
+                border: `1px solid ${qty > 0 ? 'rgba(200,146,42,0.4)' : 'var(--border)'}`,
                 borderRadius: 14,
                 padding: '14px 16px',
                 display: 'flex',
@@ -700,7 +598,7 @@ function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeC
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              boxShadow: '0 8px 32px rgba(83,74,183,0.4)',
+              boxShadow: '0 8px 32px rgba(200,146,42,0.4)',
             }}
           >
             <span
@@ -722,8 +620,18 @@ function MenuScreen({ tableMembers, cart, activeMember, setActiveMember, activeC
   )
 }
 
-// ─── SCREEN 4: Cart Review ────────────────────────────────────────────────────
+// ─── Payment methods ──────────────────────────────────────────────────────────
+const PAYMENT_METHODS = [
+  { id: 'card', label: 'Card', icon: '💳', desc: 'Debit or credit card' },
+  { id: 'apple_pay', label: 'Apple Pay', icon: '🍎', desc: 'Fast and secure' },
+  { id: 'wallet', label: 'Wallet Money', icon: '💵', desc: 'Your wallet balance' },
+  { id: 'counter', label: 'Pay at Counter', icon: '💰', desc: 'Cash or card at bar' },
+]
+
+// ─── SCREEN 5: Cart Review ────────────────────────────────────────────────────
 function CartReviewScreen({ tableMembers, cart, onBack, onPlace }) {
+  const [selectedPayment, setSelectedPayment] = useState('card')
+
   const getMemberTotal = (memberId) => {
     return Object.entries(cart[memberId] || {}).reduce((total, [itemId, qty]) => {
       const item = getItemById(itemId)
@@ -814,8 +722,8 @@ function CartReviewScreen({ tableMembers, cart, onBack, onPlace }) {
       {/* Table total */}
       <div
         style={{
-          backgroundColor: 'rgba(83,74,183,0.08)',
-          border: '1px solid rgba(83,74,183,0.2)',
+          backgroundColor: 'rgba(200,146,42,0.08)',
+          border: '1px solid rgba(200,146,42,0.2)',
           borderRadius: 14,
           padding: '14px 16px',
           display: 'flex',
@@ -824,12 +732,65 @@ function CartReviewScreen({ tableMembers, cart, onBack, onPlace }) {
           marginBottom: 24,
         }}
       >
-        <span style={{ color: '#9B93E8', fontSize: 14, fontWeight: 600 }}>Table Total</span>
-        <span style={{ color: '#9B93E8', fontSize: 18, fontWeight: 800 }}>€{tableTotal}</span>
+        <span style={{ color: '#DBA84E', fontSize: 14, fontWeight: 600 }}>Table Total</span>
+        <span style={{ color: '#DBA84E', fontSize: 18, fontWeight: 800 }}>€{tableTotal}</span>
+      </div>
+
+      {/* Payment method selection */}
+      <div style={{ marginBottom: 24 }}>
+        <h3 style={{ color: 'var(--text)', fontSize: 13, fontWeight: 600, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          Payment Method
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {PAYMENT_METHODS.map(method => (
+            <button
+              key={method.id}
+              onClick={() => setSelectedPayment(method.id)}
+              style={{
+                backgroundColor: selectedPayment === method.id ? 'rgba(83,74,183,0.15)' : 'var(--surface)',
+                border: `2px solid ${selectedPayment === method.id ? 'var(--accent)' : 'var(--border)'}`,
+                borderRadius: 12,
+                padding: '12px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              <span style={{ fontSize: 20, flexShrink: 0 }}>{method.icon}</span>
+              <div style={{ flex: 1, textAlign: 'left' }}>
+                <div style={{ color: 'var(--text)', fontSize: 13, fontWeight: 600 }}>
+                  {method.label}
+                </div>
+                <div style={{ color: 'var(--muted)', fontSize: 11, marginTop: 1 }}>
+                  {method.desc}
+                </div>
+              </div>
+              <div
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  border: `2px solid ${selectedPayment === method.id ? 'var(--accent)' : 'var(--border)'}`,
+                  backgroundColor: selectedPayment === method.id ? 'var(--accent)' : 'transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                {selectedPayment === method.id && (
+                  <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>✓</span>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
       <button
-        onClick={onPlace}
+        onClick={() => onPlace(selectedPayment)}
         disabled={!hasItems}
         style={{
           width: '100%',
@@ -853,7 +814,7 @@ function CartReviewScreen({ tableMembers, cart, onBack, onPlace }) {
   )
 }
 
-// ─── SCREEN 5: Order Placed ───────────────────────────────────────────────────
+// ─── SCREEN 6: Order Placed ───────────────────────────────────────────────────
 function OrderPlacedScreen({ status, venue }) {
   const { t } = useLang()
   const isReady = status === 'ready'
@@ -864,7 +825,7 @@ function OrderPlacedScreen({ status, venue }) {
       <div
         style={{
           width: 72, height: 72, borderRadius: '50%',
-          backgroundColor: isReady ? 'rgba(74,222,128,0.1)' : 'rgba(83,74,183,0.1)',
+          backgroundColor: isReady ? 'rgba(74,222,128,0.1)' : 'rgba(200,146,42,0.1)',
           border: `2px solid ${isReady ? '#4ade80' : 'var(--accent)'}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 32, marginBottom: 20,
@@ -917,7 +878,7 @@ function OrderPlacedScreen({ status, venue }) {
         </div>
       </div>
 
-      {/* QR scanner — appears when ready */}
+      {/* Pickup QR — appears when ready */}
       {isReady && (
         <div
           style={{
@@ -933,58 +894,7 @@ function OrderPlacedScreen({ status, venue }) {
             animation: 'fadeIn 0.5s ease',
           }}
         >
-          {/* Scanner frame */}
-          <div
-            style={{
-              width: 180, height: 180,
-              backgroundColor: '#0a0a0c',
-              borderRadius: 16,
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {/* Corner markers */}
-            {[
-              { top: 12, left: 12 },
-              { top: 12, right: 12 },
-              { bottom: 12, left: 12 },
-              { bottom: 12, right: 12 },
-            ].map((pos, i) => (
-              <div
-                key={i}
-                style={{
-                  position: 'absolute',
-                  width: 24, height: 24,
-                  borderColor: '#4ade80',
-                  borderStyle: 'solid',
-                  borderWidth: 0,
-                  borderTopWidth: pos.top !== undefined ? 3 : 0,
-                  borderBottomWidth: pos.bottom !== undefined ? 3 : 0,
-                  borderLeftWidth: pos.left !== undefined ? 3 : 0,
-                  borderRightWidth: pos.right !== undefined ? 3 : 0,
-                  borderRadius: 3,
-                  ...pos,
-                }}
-              />
-            ))}
-
-            {/* Scan line */}
-            <div
-              style={{
-                position: 'absolute',
-                left: 12, right: 12, height: 2,
-                backgroundColor: '#4ade80',
-                boxShadow: '0 0 8px #4ade80',
-                animation: 'scan 1.8s ease-in-out infinite',
-              }}
-            />
-
-            <div style={{ color: 'var(--muted)', fontSize: 12, zIndex: 1 }}>Ready to scan</div>
-          </div>
-
+          <QRCode value={`PICKUP-${venue?.id || 'BAR'}`} size={160} />
           <div style={{ textAlign: 'center' }}>
             <div style={{ color: 'var(--text)', fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
               Show this to the bartender
@@ -999,22 +909,21 @@ function OrderPlacedScreen({ status, venue }) {
       {!isReady && (
         <div
           style={{
-            backgroundColor: 'rgba(83,74,183,0.08)',
-            border: '1px solid rgba(83,74,183,0.2)',
+            backgroundColor: 'rgba(200,146,42,0.08)',
+            border: '1px solid rgba(200,146,42,0.2)',
             borderRadius: 14,
             padding: '14px 16px',
             width: '100%',
             textAlign: 'center',
           }}
         >
-          <div style={{ color: '#9B93E8', fontSize: 13, fontWeight: 600 }}>Estimated wait</div>
+          <div style={{ color: '#DBA84E', fontSize: 13, fontWeight: 600 }}>Estimated wait</div>
           <div style={{ color: 'var(--muted)', fontSize: 12, marginTop: 4 }}>5 – 8 minutes</div>
         </div>
       )}
 
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes scan { 0%, 100% { top: 12px; } 50% { top: calc(100% - 14px); } }
       `}</style>
     </div>
   )
@@ -1022,7 +931,6 @@ function OrderPlacedScreen({ status, venue }) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function GroupOrder() {
-  const navigate = useNavigate()
   const member = getMember()
   const me = {
     id: member?.id || 'me',
@@ -1033,38 +941,40 @@ export default function GroupOrder() {
     tier: member?.tier || 'Silver',
   }
 
-  const [step, setStep] = useState('home')
+  // Venue context: coming from a venue page (?venue=) counts as having scanned its QR
+  const [searchParams] = useSearchParams()
+  const paramVenue = getVenueById(searchParams.get('venue'))
+  const [venue, setVenue] = useState(paramVenue)
+  const [scanDetected, setScanDetected] = useState(false)
+
+  const [step, setStep] = useState(paramVenue ? 'table' : 'scan')
   const [tableMembers, setTableMembers] = useState([me])
   const [cart, setCart] = useState({})
   const [activeCategory, setActiveCategory] = useState(MENU[0].category)
   const [activeMember, setActiveMember] = useState(me.id)
   const [orderStatus, setOrderStatus] = useState('preparing')
 
-  // Venue context: ?venue= param (from a venue page) > last venue > ask
-  const [searchParams] = useSearchParams()
-  const paramVenue = getVenueById(searchParams.get('venue'))
-  const [venue, setVenue] = useState(
-    () => paramVenue || getVenueById(localStorage.getItem(VENUE_KEY)) || null
-  )
-
+  // Demo: venue QR "detected" after a short scan
   useEffect(() => {
-    if (paramVenue && paramVenue.id !== venue?.id) {
-      setVenue(paramVenue)
-    }
-    if (venue) localStorage.setItem(VENUE_KEY, venue.id)
-  }, [paramVenue?.id, venue?.id])
+    if (step !== 'scan') return
+    const detected = getVenueById(localStorage.getItem(VENUE_KEY)) || VENUES[0]
+    const t1 = setTimeout(() => setScanDetected(true), 2200)
+    const t2 = setTimeout(() => {
+      setVenue(detected)
+      localStorage.setItem(VENUE_KEY, detected.id)
+      setStep('table')
+    }, 3000)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [step])
 
-  function pickVenue(v) {
-    localStorage.setItem(VENUE_KEY, v.id)
-    setVenue(v)
-  }
-
-  function changeVenue() {
+  function rescan() {
     localStorage.removeItem(VENUE_KEY)
     setVenue(null)
+    setScanDetected(false)
+    setStep('scan')
   }
 
-  // Demo: auto-join after scanning
+  // Demo: joining a friend's table — auto-connect after scanning
   useEffect(() => {
     if (step !== 'join') return
     const t = setTimeout(() => {
@@ -1079,10 +989,9 @@ export default function GroupOrder() {
     return () => clearTimeout(t)
   }, [step])
 
-  // Demo: friends auto-join when QR screen opens
+  // Demo: friends auto-join when the host QR is showing
   useEffect(() => {
     if (step !== 'qr') return
-    setTableMembers([me])
     const t1 = setTimeout(() => setTableMembers(p => [...p, DEMO_FRIENDS[0]]), 2000)
     const t2 = setTimeout(() => setTableMembers(p => [...p, DEMO_FRIENDS[1]]), 3800)
     return () => { clearTimeout(t1); clearTimeout(t2) }
@@ -1091,7 +1000,6 @@ export default function GroupOrder() {
   // Demo: order auto-advances to ready after 5s
   useEffect(() => {
     if (step !== 'placed') return
-    setOrderStatus('preparing')
     const t = setTimeout(() => setOrderStatus('ready'), 5000)
     return () => clearTimeout(t)
   }, [step])
@@ -1113,8 +1021,8 @@ export default function GroupOrder() {
   const getTotalItems = () =>
     Object.values(cart).reduce((t, mc) => t + Object.values(mc).reduce((a, b) => a + b, 0), 0)
 
-  if (!venue) return <VenuePickerScreen onPick={pickVenue} onBack={() => navigate('/venues')} />
-  if (step === 'home') return <HomeScreen onStart={() => setStep('qr')} onJoin={() => setStep('join')} venue={venue} onChangeVenue={changeVenue} />
+  if (step === 'scan') return <VenueScanScreen detected={scanDetected} />
+  if (step === 'table') return <TableStartScreen venue={venue} onStart={() => { setTableMembers([me]); setStep('qr') }} onJoin={() => setStep('join')} onRescan={rescan} />
   if (step === 'join') return <JoinScreen />
   if (step === 'qr') return <HostQRScreen member={member} tableMembers={tableMembers} venue={venue} onStart={() => { setActiveMember(me.id); setStep('menu') }} />
   if (step === 'menu') return (
@@ -1124,13 +1032,13 @@ export default function GroupOrder() {
       activeCategory={activeCategory} setActiveCategory={setActiveCategory}
       addToCart={addToCart} removeFromCart={removeFromCart}
       getTotalItems={getTotalItems} onViewCart={() => setStep('cart')}
-      onBack={() => setStep('home')} venue={venue}
+      onBack={() => setStep('table')} venue={venue}
     />
   )
   if (step === 'cart') return (
     <CartReviewScreen
       tableMembers={tableMembers} cart={cart}
-      onBack={() => setStep('menu')} onPlace={() => setStep('placed')}
+      onBack={() => setStep('menu')} onPlace={() => { setOrderStatus('preparing'); setStep('placed') }}
     />
   )
   if (step === 'placed') return <OrderPlacedScreen status={orderStatus} venue={venue} />

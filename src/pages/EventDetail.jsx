@@ -1,23 +1,10 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getEvent } from '../data/events'
-import { getMember } from '../lib/member'
-import { useLang } from '../lib/i18n'
 
 const AMBER = '#C8A24B'
 const AMBER_SOFT = 'rgba(200,162,75,0.12)'
 const AMBER_BORDER = 'rgba(200,162,75,0.25)'
-
-function Pill({ children, color = AMBER }) {
-  return (
-    <span
-      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
-      style={{ backgroundColor: `${color}18`, color, border: `1px solid ${color}33` }}
-    >
-      {children}
-    </span>
-  )
-}
 
 function DetailRow({ icon, label, value }) {
   return (
@@ -98,9 +85,7 @@ function ConfirmationScreen({ event, shareConsent, onClose }) {
 export default function EventDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { t } = useLang()
   const event = getEvent(id)
-  const member = getMember()
 
   const [shareConsent, setShareConsent] = useState(false)   // GDPR: unchecked by default
   const [marketingConsent, setMarketingConsent] = useState(false)

@@ -4,6 +4,9 @@ import { signUp, signInWithGoogle } from '../lib/auth'
 import { WELCOME_BONUS } from '../data/rewards'
 import { CITIES } from '../data/venues'
 
+// Latest allowed date of birth — must be 18+
+const DOB_MAX = new Date(Date.now() - 18 * 365.25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+
 const REFERRAL_OPTIONS = [
   'Friend or classmate',
   'University notice board',
@@ -306,7 +309,7 @@ export default function SignUp() {
                 style={{ ...inputStyle, borderColor: errors.dob ? '#f87171' : 'var(--border)' }}
                 value={form.dob}
                 onChange={e => set('dob', e.target.value)}
-                max={new Date(Date.now() - 18 * 365.25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                max={DOB_MAX}
               />
               {errors.dob && <p className="text-red-400 text-xs mt-1">{errors.dob}</p>}
             </div>

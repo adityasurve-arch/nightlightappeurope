@@ -41,7 +41,7 @@ export default function Login() {
     try {
       await signIn({ email: 'demo@nightlight.app', password: 'demo1234' })
       navigate('/dashboard')
-    } catch (err) {
+    } catch {
       setError('Demo account not set up yet — ask the admin.')
     } finally {
       setLoading(false)
