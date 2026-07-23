@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { supabase } from './lib/supabase'
+import { getMember, saveMember } from './lib/member'
 import { LanguageProvider } from './lib/i18n'
 import BottomNav from './components/BottomNav'
 import Landing from './pages/Landing'
@@ -17,21 +16,24 @@ import Login from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
 import QuarterDashboard from './pages/QuarterDashboard'
 
+// Public demo: no backend auth. Protected routes just need a member record in
+// localStorage — if there isn't one yet (e.g. someone opened a deep link
+// directly), provision the demo member so the whole app is explorable.
+const DEMO_MEMBER = {
+  firstName: 'Aditya',
+  lastName: 'Surve',
+  email: 'aditya.surve@edu.escp.eu',
+  city: 'Paris',
+  memberId: 'NL-DEMO-2025',
+  points: 545,
+  tier: 'Silver',
+  verified: true,
+  signupDate: '2025-01-15T00:00:00.000Z',
+  faceId: false,
+}
+
 function RequireAuth({ children }) {
-  const [status, setStatus] = useState('loading')
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setStatus(session ? 'auth' : 'unauth')
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setStatus(session ? 'auth' : 'unauth')
-    })
-    return () => subscription.unsubscribe()
-  }, [])
-
-  if (status === 'loading') return null
-  if (status === 'unauth') return <Navigate to="/login" replace />
+  if (!getMember()) saveMember(DEMO_MEMBER)
   return children
 }
 

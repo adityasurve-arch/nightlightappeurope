@@ -28,8 +28,8 @@ export default function Venues() {
               onClick={() => setActiveCity(member.city)}
               className="text-xs px-3 py-1.5 rounded-lg transition-colors"
               style={{
-                backgroundColor: activeCity === member.city ? 'rgba(83,74,183,0.2)' : 'var(--surface)',
-                color: activeCity === member.city ? '#9B93E8' : 'var(--muted)',
+                backgroundColor: activeCity === member.city ? 'rgba(200,146,42,0.2)' : 'var(--surface)',
+                color: activeCity === member.city ? '#DBA84E' : 'var(--muted)',
                 border: `1px solid ${activeCity === member.city ? 'var(--accent)' : 'var(--border)'}`,
               }}
             >

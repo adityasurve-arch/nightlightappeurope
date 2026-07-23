@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { signUp, signInWithGoogle } from '../lib/auth'
+import { Link, useNavigate } from 'react-router-dom'
+import { saveMember, generateMemberId } from '../lib/member'
 import { WELCOME_BONUS } from '../data/rewards'
 import { CITIES } from '../data/venues'
 
@@ -26,6 +26,7 @@ const UNIVERSITIES = {
 const STEPS = ['Personal', 'Location', 'Preferences', 'Verify ID']
 
 export default function SignUp() {
+  const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -105,23 +106,24 @@ export default function SignUp() {
     }, 2000)
   }
 
-  async function handleSubmit() {
+  function handleSubmit() {
     setLoading(true)
     setSubmitError(null)
-    try {
-      await signUp({
-        email: form.email,
-        password: form.password,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        city: form.city,
-      })
-      setDone(true)
-    } catch (err) {
-      setSubmitError(err.message)
-    } finally {
-      setLoading(false)
-    }
+    // Public demo: persist the new member to localStorage (no backend call).
+    saveMember({
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      city: form.city || 'Paris',
+      memberId: generateMemberId(),
+      points: WELCOME_BONUS,
+      tier: 'Bronze',
+      verified: docScanned || faceScanned,
+      signupDate: new Date().toISOString(),
+      faceId: faceScanned,
+    })
+    setLoading(false)
+    setDone(true)
   }
 
   const inputClass = "w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
@@ -145,11 +147,11 @@ export default function SignUp() {
           </p>
         </div>
         <Link
-          to="/login"
+          to="/dashboard"
           className="w-full max-w-xs py-3.5 rounded-xl font-semibold text-sm text-center block"
           style={{ backgroundColor: 'var(--accent)', color: 'white' }}
         >
-          Sign in to your account →
+          Go to my card →
         </Link>
         <p style={{ color: 'var(--muted)', fontSize: '11px' }}>
           Quarter · Drink responsibly
@@ -168,11 +170,23 @@ export default function SignUp() {
         <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Quarter</span>
       </Link>
 
-      {/* Google sign-up */}
+      {/* Google sign-up — demo: create a member and go straight in */}
       <button
-        onClick={async () => {
+        onClick={() => {
           setGoogleLoading(true)
-          try { await signInWithGoogle() } catch { setGoogleLoading(false) }
+          saveMember({
+            firstName: 'Aditya',
+            lastName: 'Surve',
+            email: 'aditya.surve@edu.escp.eu',
+            city: 'Paris',
+            memberId: generateMemberId(),
+            points: WELCOME_BONUS,
+            tier: 'Bronze',
+            verified: false,
+            signupDate: new Date().toISOString(),
+            faceId: false,
+          })
+          navigate('/dashboard')
         }}
         disabled={googleLoading}
         className="w-full py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-3 mb-4 transition-all active:scale-95"

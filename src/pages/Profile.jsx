@@ -1,42 +1,14 @@
-import { useNavigate, useLocation } from 'react-router-dom'
-import { useEffect, useRef } from 'react'
-import { getMember, clearMember, getCompanions } from '../lib/member'
+import { useNavigate } from 'react-router-dom'
+import { getMember, clearMember } from '../lib/member'
 import { useLang } from '../lib/i18n'
 import { getTier } from '../data/rewards'
-import { SYNTHETIC_VISITS } from '../data/visits'
-import { NETWORK_MEMBERS, TIER_COLORS } from '../data/networkMembers'
 import TierBadge from '../components/TierBadge'
-
-function buildCrew() {
-  const stored = getCompanions()
-  // count outings per network member across all visits
-  const counts = {}
-  SYNTHETIC_VISITS.forEach(visit => {
-    const ids = stored[visit.id] ?? visit.defaultCompanions ?? []
-    ids.forEach(id => {
-      counts[id] = (counts[id] ?? 0) + 1
-    })
-  })
-  return Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([id, outings]) => ({ member: NETWORK_MEMBERS.find(m => m.id === id), outings }))
-    .filter(({ member }) => !!member)
-}
 
 export default function Profile() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const crewRef = useRef(null)
   const member = getMember()
   const tier = getTier(member.points)
-  const crew = buildCrew()
   const { lang, setLang, t } = useLang()
-
-  useEffect(() => {
-    if (location.search.includes('section=crew') && crewRef.current) {
-      setTimeout(() => crewRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
-    }
-  }, [location.search])
 
   function handleSignOut() {
     clearMember()
@@ -159,64 +131,6 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Your crew */}
-        <div ref={crewRef}>
-          <div className="flex items-baseline justify-between mb-3">
-            <h2 style={{ color: 'var(--text)' }} className="text-sm font-semibold">{t('profile.crew')}</h2>
-            <span style={{ color: 'var(--muted)', fontSize: '11px' }}>
-              {crew.length} {crew.length !== 1 ? t('profile.networkMembers') : t('profile.networkMember')}
-            </span>
-          </div>
-
-          {crew.length === 0 ? (
-            <div
-              className="rounded-2xl px-4 py-6 text-center"
-              style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
-            >
-              <p style={{ color: 'var(--muted)' }} className="text-sm">
-                {t('profile.noCrew')}
-              </p>
-            </div>
-          ) : (
-            <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
-              {crew.map(({ member: m, outings }, i, arr) => {
-                const tierColor = TIER_COLORS[m.tier] || 'var(--muted)'
-                return (
-                  <div
-                    key={m.id}
-                    className="flex items-center gap-3 px-4 py-3"
-                    style={{
-                      backgroundColor: 'var(--surface)',
-                      borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
-                    }}
-                  >
-                    {/* Avatar */}
-                    <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
-                      style={{ backgroundColor: `${tierColor}22`, color: tierColor }}
-                    >
-                      {m.firstName[0]}{m.lastName[0]}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div style={{ color: 'var(--text)' }} className="text-sm font-medium">
-                        {m.firstName} {m.lastName}
-                      </div>
-                      <div style={{ color: 'var(--muted)', fontSize: '11px' }}>
-                        {m.city} · {m.tier}
-                      </div>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <div style={{ color: 'var(--text)' }} className="text-sm font-semibold">{outings}</div>
-                      <div style={{ color: 'var(--muted)', fontSize: '10px' }}>
-                        {outings !== 1 ? t('profile.outings') : t('profile.outing')}
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
 
         {/* Quarter brand dashboard */}
         <button

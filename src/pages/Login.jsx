@@ -1,51 +1,47 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { signIn, signInWithGoogle } from '../lib/auth'
+import { getMember, saveMember, generateMemberId } from '../lib/member'
+
+const DEMO_MEMBER = {
+  firstName: 'Aditya',
+  lastName: 'Surve',
+  email: 'aditya.surve@edu.escp.eu',
+  city: 'Paris',
+  memberId: 'NL-DEMO-2025',
+  points: 545,
+  tier: 'Silver',
+  verified: true,
+  signupDate: '2025-01-15T00:00:00.000Z',
+  faceId: false,
+}
 
 export default function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
 
-  async function handleLogin(e) {
+  // Public demo: no backend. "Signing in" reuses an existing member if there is
+  // one, otherwise creates one from the email entered, then enters the app.
+  function handleLogin(e) {
     e.preventDefault()
     setLoading(true)
-    setError(null)
-    try {
-      await signIn({ email, password })
-      navigate('/dashboard')
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+    const existing = getMember()
+    saveMember(existing || { ...DEMO_MEMBER, email: email || DEMO_MEMBER.email, memberId: generateMemberId() })
+    navigate('/dashboard')
   }
 
-  async function handleGoogle() {
+  function handleGoogle() {
     setGoogleLoading(true)
-    setError(null)
-    try {
-      await signInWithGoogle()
-    } catch (err) {
-      setError(err.message)
-      setGoogleLoading(false)
-    }
+    saveMember(getMember() || DEMO_MEMBER)
+    navigate('/dashboard')
   }
 
-  async function handleDemo() {
+  function handleDemo() {
     setLoading(true)
-    setError(null)
-    try {
-      await signIn({ email: 'demo@nightlight.app', password: 'demo1234' })
-      navigate('/dashboard')
-    } catch {
-      setError('Demo account not set up yet — ask the admin.')
-    } finally {
-      setLoading(false)
-    }
+    saveMember(DEMO_MEMBER)
+    navigate('/dashboard')
   }
 
   return (
@@ -154,15 +150,6 @@ export default function Login() {
               }}
             />
           </div>
-
-          {error && (
-            <div
-              className="rounded-xl px-4 py-3 text-xs"
-              style={{ backgroundColor: 'rgba(217,83,79,0.1)', border: '1px solid rgba(217,83,79,0.3)', color: '#f87171' }}
-            >
-              {error}
-            </div>
-          )}
 
           <button
             type="submit"

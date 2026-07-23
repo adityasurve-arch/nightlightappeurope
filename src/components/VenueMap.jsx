@@ -48,8 +48,8 @@ export default function VenueMap() {
         className: '',
         html: `<div style="
           width:34px;height:34px;border-radius:50% 50% 50% 0;
-          background:#534AB7;transform:rotate(-45deg);
-          border:2px solid #9B93E8;box-shadow:0 2px 10px rgba(83,74,183,0.6);
+          background:#C8922A;transform:rotate(-45deg);
+          border:2px solid #DBA84E;box-shadow:0 2px 10px rgba(200,146,42,0.6);
           display:flex;align-items:center;justify-content:center;">
           <span style="transform:rotate(45deg);font-size:15px;">🍸</span>
         </div>`,
@@ -65,7 +65,7 @@ export default function VenueMap() {
           <div style="font-weight:700;font-size:13px;margin-bottom:2px;">${v.name}</div>
           <div style="font-size:11px;color:#666;margin-bottom:6px;">${v.type}</div>
           <button id="go-${v.id}" style="
-            width:100%;background:#534AB7;color:white;border:none;border-radius:8px;
+            width:100%;background:#C8922A;color:white;border:none;border-radius:8px;
             padding:7px 0;font-size:12px;font-weight:700;cursor:pointer;">
             View venue →
           </button>

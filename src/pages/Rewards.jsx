@@ -77,7 +77,7 @@ export default function Rewards() {
                   <span className="text-base">{icon}</span>
                   <span style={{ color: 'var(--muted)' }} className="text-sm">{action}</span>
                 </div>
-                <span style={{ color: '#9B93E8' }} className="text-xs font-semibold">{pts}</span>
+                <span style={{ color: '#DBA84E' }} className="text-xs font-semibold">{pts}</span>
               </div>
             ))}
           </div>
@@ -100,7 +100,7 @@ export default function Rewards() {
                 <div className="flex items-center justify-between mb-3">
                   <TierBadge tier={tr} size="md" />
                   {tr.name === tier.name && (
-                    <span style={{ color: 'var(--accent)', backgroundColor: 'rgba(83,74,183,0.15)' }} className="text-xs px-2 py-0.5 rounded-full">
+                    <span style={{ color: 'var(--accent)', backgroundColor: 'rgba(200,146,42,0.15)' }} className="text-xs px-2 py-0.5 rounded-full">
                       {t('rewards.current')}
                     </span>
                   )}
@@ -142,7 +142,7 @@ export default function Rewards() {
                   <span style={{ color: 'var(--text)' }} className="text-sm">{t(labelKey)}</span>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <div style={{ color: '#9B93E8' }} className="text-xs font-semibold">{pts} pts</div>
+                  <div style={{ color: '#DBA84E' }} className="text-xs font-semibold">{pts} pts</div>
                   {member.points < pts ? (
                     <div style={{ color: 'var(--muted)' }} className="text-xs">{pts - member.points} {t('rewards.away')} 🔒</div>
                   ) : (

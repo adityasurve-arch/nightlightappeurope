@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0E0E10;
-  --surface: #1A1A1E;
-  --surface2: #24242A;
-  --accent: #534AB7;
-  --accent-hover: #6A61D0;
-  --accent-soft: rgba(83, 74, 183, 0.14);
-  --accent-glow: rgba(83, 74, 183, 0.45);
-  --accent-light: #9B93E8;
-  --text: #F0F0F5;
-  --muted: #8888A0;
-  --border: #2E2E38;
+  --bg: #080808;
+  --surface: #111111;
+  --surface2: #1A1A1A;
+  --accent: #C8922A;
+  --accent-hover: #D9A040;
+  --accent-soft: rgba(200, 146, 42, 0.12);
+  --accent-glow: rgba(200, 146, 42, 0.35);
+  --accent-light: #DBA84E;
+  --text: #F0EDE8;
+  --muted: #666666;
+  --border: #1E1E1E;
   /* Conversion moments only — free rounds, urgency, unlocks */
   --amber: #FBBF24;
   --amber-soft: rgba(250, 204, 21, 0.08);
@@ -35,7 +35,7 @@
 }
 @keyframes nl-glow {
   0%, 100% { box-shadow: 0 0 18px var(--accent-glow); }
-  50%      { box-shadow: 0 0 34px var(--accent-glow), 0 0 60px rgba(83,74,183,0.2); }
+  50%      { box-shadow: 0 0 34px var(--accent-glow), 0 0 60px rgba(200,146,42,0.15); }
 }
 @keyframes nl-shimmer {
   0%   { background-position: -200% center; }
@@ -91,7 +91,7 @@ body {
   background-color: var(--bg);
   position: relative;
   /* Subtle shadow on desktop to separate from black body */
-  box-shadow: 0 0 60px rgba(83, 74, 183, 0.08), 0 0 0 1px rgba(255,255,255,0.04);
+  box-shadow: 0 0 60px rgba(200, 146, 42, 0.06), 0 0 0 1px rgba(255,255,255,0.03);
 }
 
 /* Hide scrollbar but keep scrollable */

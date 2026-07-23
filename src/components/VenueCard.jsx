@@ -5,7 +5,7 @@ const CITY_COLORS = {
 }
 
 export default function VenueCard({ venue }) {
-  const color = CITY_COLORS[venue.city] || '#534AB7'
+  const color = CITY_COLORS[venue.city] || '#C8922A'
 
   return (
     <Link
@@ -63,7 +63,7 @@ export default function VenueCard({ venue }) {
         {/* Deal badge */}
         <div
           className="rounded-lg px-3 py-2 text-xs"
-          style={{ backgroundColor: 'rgba(83,74,183,0.12)', border: '1px solid rgba(83,74,183,0.25)', color: '#9B93E8' }}
+          style={{ backgroundColor: 'rgba(200,146,42,0.12)', border: '1px solid rgba(200,146,42,0.25)', color: '#DBA84E' }}
         >
           🏷 {venue.deal}
         </div>
