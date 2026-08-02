@@ -7,6 +7,9 @@ import { useLang } from '../lib/i18n'
 
 const PARIS_CENTER = [48.8625, 2.3490]
 
+// Keep the map light: just the 5 Paris bars
+const PARIS_BARS = VENUES.filter(v => v.city === 'Paris').slice(0, 5)
+
 function distanceKm(a, b) {
   const R = 6371
   const dLat = ((b[0] - a[0]) * Math.PI) / 180
@@ -43,7 +46,7 @@ export default function VenueMap() {
     L.control.zoom({ position: 'bottomright' }).addTo(map)
 
     // Venue markers — purple pins matching the brand
-    VENUES.forEach(v => {
+    PARIS_BARS.forEach(v => {
       const icon = L.divIcon({
         className: '',
         html: `<div style="
@@ -106,7 +109,7 @@ export default function VenueMap() {
         }).addTo(map)
 
         // Find nearest venue and fit both in view
-        const sorted = [...VENUES].sort(
+        const sorted = [...PARIS_BARS].sort(
           (a, b) => distanceKm(here, [a.lat, a.lng]) - distanceKm(here, [b.lat, b.lng])
         )
         const closest = sorted[0]
