@@ -135,10 +135,10 @@ function EquityView({ canvasRef }) {
   return (
     <div className="qd-panel">
       <div className="qd-panel-title">Vodka brand share when prices are equal</div>
-      <div className="qd-panel-sub">% of vodka orders going to Absolut when priced at parity with house vodka. Last 18 months of parity-week data, by city.</div>
+      <div className="qd-panel-sub">% of vodka orders going to Absolut when priced at parity with house vodka, by city. Simulated data.</div>
       <div className="qd-chart-wrap"><canvas ref={canvasRef} /></div>
       <Insight>
-        Absolut commands a strong brand premium in <strong>{top}</strong> ({data.brand_equity_by_city[top].absolut_share}%) and barely outperforms house vodka in <strong>{bottom}</strong> ({data.brand_equity_by_city[bottom].absolut_share}%). That's a {gap.toFixed(1)}-point gap between the strongest and weakest student markets — driven by brand familiarity, marketing investment, and local competitive intensity. Marketing budget allocation should follow opportunity, not market size.
+        Absolut commands a strong brand premium in <strong>{top}</strong> ({data.brand_equity_by_city[top].absolut_share}%) and barely outperforms house vodka in <strong>{bottom}</strong> ({data.brand_equity_by_city[bottom].absolut_share}%). That's a {gap.toFixed(1)}-point gap between the strongest and weakest markets. With live data, this is the view that would tell a brand where marketing spend has the most headroom, rather than allocating by market size.
       </Insight>
     </div>
   )
@@ -154,7 +154,7 @@ function CompetitorView({ canvasRef }) {
   return (
     <div className="qd-panel">
       <div className="qd-panel-title">Vodka head-to-head: Brand competition at price parity</div>
-      <div className="qd-panel-sub">Real revealed-behavior share of every vodka order in parity-price weeks. Absolut versus Diageo's Smirnoff, Bacardi's Grey Goose, and house vodka. By city.</div>
+      <div className="qd-panel-sub">Share of vodka orders in parity-price weeks: Absolut versus Diageo's Smirnoff, Bacardi's Grey Goose, and house vodka, by city. Simulated data.</div>
       <div className="qd-summary-row">
         <div className="qd-summary-card">
           <div className="qd-summary-card-brand">Absolut</div>
@@ -179,7 +179,7 @@ function CompetitorView({ canvasRef }) {
       </div>
       <div className="qd-chart-wrap qd-tall"><canvas ref={canvasRef} /></div>
       <Insight>
-        Absolut dominates in <strong>{strongestCity}</strong> ({cb[strongestCity].Absolut}%), but in <strong>{weakestCity}</strong> Absolut's share collapses to {cb[weakestCity].Absolut}% — and {competitorInWeakest} ({competitorOwner}) eats into the gap with {cb[weakestCity][competitorInWeakest]}%. This is the chart brands have been trying to build for years through retail data: which competitor brand is taking share, in which market, when prices are equal. Currently their pricing teams treat all five markets the same. The data says {weakestCity} needs a different strategy than {strongestCity}.
+        Absolut dominates in <strong>{strongestCity}</strong> ({cb[strongestCity].Absolut}%), but in <strong>{weakestCity}</strong> Absolut's share collapses to {cb[weakestCity].Absolut}% — and {competitorInWeakest} ({competitorOwner}) eats into the gap with {cb[weakestCity][competitorInWeakest]}%. Retail scanner data can't show this for the on-trade: which competitor takes share, in which market, when prices are equal. If live data showed the same pattern, {weakestCity} would need a different strategy than {strongestCity}.
       </Insight>
     </div>
   )
@@ -194,10 +194,10 @@ function ElasticityView({ canvasRef }) {
   return (
     <div className="qd-panel">
       <div className="qd-panel-title">Absolut share of vodka orders, by price level</div>
-      <div className="qd-panel-sub">Network-wide. Each bar is real revealed-behavior data from price experiments run across all five cities over 18 months.</div>
+      <div className="qd-panel-sub">Network-wide, all five cities. Simulated scenario: Absolut priced 8% below, at parity with, and 18% above house vodka.</div>
       <div className="qd-chart-wrap"><canvas ref={canvasRef} /></div>
       <Insight>
-        At parity with house vodka, {shares[1]}% of students choose Absolut. Drop the price 8% and that jumps to {shares[0]}%. Raise it 18% and it falls to {shares[2]}%. That's the actual demand curve — measured in real money decisions, not surveys. Implication: Current on-trade pricing for Absolut is probably above the optimal point. Sweet spot looks like parity-to-slight-premium (3-7% over house), capturing brand value without losing the price-sensitive student segment.
+        At parity with house vodka, {shares[1]}% of students choose Absolut. Drop the price 8% and that jumps to {shares[0]}%. Raise it 18% and it falls to {shares[2]}%. This is the kind of demand curve the live network would measure from actual orders instead of surveys. A real pricing test would add more price points between parity and +18% to locate where share starts to fall sharply.
       </Insight>
     </div>
   )
@@ -212,10 +212,10 @@ function CohortView({ canvasRef }) {
   return (
     <div className="qd-panel">
       <div className="qd-panel-title">Absolut share among vodka drinkers, by member tenure</div>
-      <div className="qd-panel-sub">Cohort analysis. The longer someone has been a member, the more likely they are to choose Absolut over cheaper alternatives. This is how premium brand habit forms.</div>
+      <div className="qd-panel-sub">Cohort analysis by member tenure (simulated). Shows whether members trade up to a premium brand the longer they use the app.</div>
       <div className="qd-chart-wrap"><canvas ref={canvasRef} /></div>
       <Insight>
-        New members (0-3 months) choose Absolut {start}% of the time. After 12+ months, that climbs to {end}% — a {lift.toFixed(1)}-point lift. The trade-up window is real and measurable. This is the data brands have been guessing at for years: when does an 18-year-old become a premium drinker, and how can marketing accelerate that transition? Now you can see it.
+        New members (0-3 months) choose Absolut {start}% of the time. After 12+ months, that climbs to {end}% — a {lift.toFixed(1)}-point lift. With live data, this curve would show brands when trade-up happens and which marketing moments speed it up. Tenure is not age, so a real study would also split cohorts by age group.
       </Insight>
     </div>
   )
@@ -445,7 +445,7 @@ export default function QuarterDashboard() {
           Quarter · Network overview · week {data.metadata?.week ?? 19}, 2026
         </div>
         <h1 className="qd-h1">Quarter</h1>
-        <div className="qd-subhead">5 cities · 25,000 members · 18 months of behavioral data</div>
+        <div className="qd-subhead">Prototype · simulated data · 5 cities · 25,000 synthetic members</div>
       </header>
 
       <div className="qd-kpi-row">
@@ -491,7 +491,7 @@ export default function QuarterDashboard() {
       {view === 'campaigns' && <CampaignsView />}
 
       <div className="qd-footer">
-        Quarter is a behavioral data platform for alcohol brands. Data shown is simulated to demonstrate the depth of insight the live network surfaces — 25,000 members, 1.57M drinks, 18 months of history. The production system ingests real POS data via API in real time.
+        Quarter is a behavioral data platform for alcohol brands. All data shown is simulated (25,000 synthetic members, 1.57M drinks, 18 months) to demonstrate the insight a live network could surface. A production version would ingest venue POS data via API.
       </div>
     </div>
   )

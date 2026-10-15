@@ -33,7 +33,7 @@ The app is designed as a mobile-first phone shell:
 
 - **Public routes:** `/` (Landing), `/signup`
 - **Protected routes:** `/dashboard`, `/rewards`, `/venues`, `/history`, `/profile`
-- `RequireAuth` — redirects unauthenticated users to `/login` (Supabase session check)
+- `RequireAuth` — no real auth: if no member is in `localStorage`, it provisions a demo member so every page is explorable
 - `ProtectedLayout` — wraps every protected route with `<BottomNav />` and a `pb-[64px]` content spacer
 
 ---
@@ -60,10 +60,10 @@ All state lives in `localStorage` — no API or database.
 
 | Function | Key | Purpose |
 |----------|-----|---------|
-| `getMember()` / `saveMember()` / `clearMember()` / `updateMember()` | `pernod_member` | Member object |
-| `getCompanions()` | `pernod_companions` | `{ [visitId]: [networkMemberId, ...] }` |
-| `setVisitCompanions(visitId, memberIds)` | `pernod_companions` | Persist companion tags for one visit |
-| `clearCompanions()` | `pernod_companions` | Clear all tags |
+| `getMember()` / `saveMember()` / `clearMember()` / `updateMember()` | `nl_member` | Member object |
+| `getCompanions()` | `nl_companions` | `{ [visitId]: [networkMemberId, ...] }` |
+| `setVisitCompanions(visitId, memberIds)` | `nl_companions` | Persist companion tags for one visit |
+| `clearCompanions()` | `nl_companions` | Clear all tags |
 
 Companion data in `localStorage` **overrides** the `defaultCompanions` array hardcoded on each visit in `visits.js`. Always read via `getCompanions()` before falling back to `visit.defaultCompanions`.
 
@@ -71,7 +71,9 @@ Companion data in `localStorage` **overrides** the `defaultCompanions` array har
 
 ### Data files (no network calls, fully hardcoded)
 
-**`src/data/venues.js`** — 15 partner venues across Paris, Milan, Barcelona, Vienna, Lisbon. Fields: `id, name, city, address, hours, deal, mapsUrl`.
+**`src/data/venues.js`** — 5 partner venues in Paris. Fields: `id, name, city, address, hours, deal, mapsUrl`.
+
+**`src/data/quarterSummary.json`** — simulated brand-dashboard dataset (25,000 synthetic members, 5 cities) used by `/quarter`. Dashboard copy must keep stating that this data is simulated.
 
 **`src/data/rewards.js`** — Tier definitions (Bronze 0–499, Silver 500–1499, Gold 1500+), `WELCOME_BONUS = 50`, helpers: `getTier(points)`, `getNextTier(points)`, `progressToNextTier(points)`.
 
@@ -89,7 +91,7 @@ Companion data in `localStorage` **overrides** the `defaultCompanions` array har
 ```
 Exports `VISIT_CITIES = ['All', 'Paris', 'Milan', 'Barcelona', 'Vienna', 'Lisbon']`.
 
-**`src/data/networkMembers.js`** — 13 mock Pernod Network members (simulating a real member registry). Each:
+**`src/data/networkMembers.js`** — 13 mock network members (simulating a real member registry). Each:
 ```js
 { id, firstName, lastName, city, tier, memberId }
 ```

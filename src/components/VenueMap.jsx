@@ -81,6 +81,8 @@ export default function VenueMap() {
     })
 
     return () => { map.remove(); mapRef.current = null }
+    // Map is created once on mount; navigate is stable.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function locateMe() {

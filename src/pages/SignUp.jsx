@@ -165,7 +165,7 @@ export default function SignUp() {
       {/* Logo */}
       <Link to="/" className="flex items-center gap-2 mb-6">
         <div style={{ backgroundColor: 'var(--accent)' }} className="w-7 h-7 rounded-md flex items-center justify-center">
-          <span className="text-white text-xs font-bold">NL</span>
+          <span className="text-white text-xs font-bold">Q</span>
         </div>
         <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Quarter</span>
       </Link>

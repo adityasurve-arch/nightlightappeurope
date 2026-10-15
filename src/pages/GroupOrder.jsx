@@ -999,6 +999,8 @@ export default function GroupOrder() {
       setStep('menu')
     }, 3000)
     return () => clearTimeout(t)
+    // Only re-run on step change; `me` is rebuilt every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step])
 
   // Demo: friends auto-join when the host QR is showing
