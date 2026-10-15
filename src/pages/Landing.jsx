@@ -33,7 +33,7 @@ function LanguagePicker({ onPick }) {
         className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 nl-pop"
         style={{ backgroundColor: 'var(--accent)' }}
       >
-        <span className="text-white text-lg font-bold">NL</span>
+        <span className="text-white text-lg font-bold">Q</span>
       </div>
       <h1 style={{ color: 'var(--text)' }} className="text-xl font-bold mb-1 text-center">
         Choose your language
@@ -67,7 +67,7 @@ export default function Landing() {
 
   useEffect(() => {
     if (getMember()) navigate('/venues', { replace: true })
-  }, [])
+  }, [navigate])
 
   function handleDemo() {
     saveMember(DEMO_MEMBER)
@@ -88,7 +88,7 @@ export default function Landing() {
             className="w-8 h-8 rounded-xl flex items-center justify-center"
             style={{ backgroundColor: 'var(--accent)' }}
           >
-            <span className="text-white text-xs font-bold">NL</span>
+            <span className="text-white text-xs font-bold">Q</span>
           </div>
           <span style={{ color: 'var(--text)' }} className="font-semibold text-sm">Quarter</span>
         </div>
